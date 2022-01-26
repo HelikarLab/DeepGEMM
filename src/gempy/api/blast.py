@@ -9,6 +9,7 @@ class Diamond(Backend):
         pass
 
     def blastp(self):
+        pass
 
 BACKENDS = {
     "diamond": {

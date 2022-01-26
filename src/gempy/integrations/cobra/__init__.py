@@ -1,0 +1,1 @@
+from gempy.integrations.cobra.model import Model
