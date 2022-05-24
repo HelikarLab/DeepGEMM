@@ -1,0 +1,11 @@
+.git
+.venv
+.vscode
+ci
+docker/gempy
+.appveyor.yml
+.env
+.gitignore
+.releasrc
+.travis.yml
+Makefile
