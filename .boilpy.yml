@@ -22,6 +22,6 @@ default_context:
   docker_service_username: "achillesrasquinha"
   docker_service_reponame: "gempy"
   github_action: "n"
-  ml: "n"
+  ml: "y"
   editor: "vscode"
   url: "https://github.com/achillesrasquinha/gempy"
