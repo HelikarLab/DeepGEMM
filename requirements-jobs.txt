@@ -16,7 +16,7 @@ coveralls
 pluggy<1,>=0.12.0
 docstr-coverage
 bpyutils
-git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
+# git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 pipenv
 jedi<0.18
 ipython
