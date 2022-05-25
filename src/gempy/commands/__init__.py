@@ -2,27 +2,21 @@
 from __future__ import absolute_import
 
 # imports - standard imports
-import sys, os
-import re
-import json
-import multiprocessing as mp
-from   functools import partial
-import traceback
 
-from gempy.commands.util 	import cli_format
-from bpyutils.util.array    	import flatten, sequencify
+from gempy.commands.util 	    import cli_format
 from bpyutils.util._dict        import merge_dict
-from bpyutils.util.system   	import (read, write, touch, popen, which)
-from bpyutils.util.environ  	import getenvvar
-from bpyutils.util.datetime 	import get_timestamp_str
-from bpyutils.util.imports      import import_or_raise
+from bpyutils.util.system   	import (touch)
 from bpyutils.util.error        import pretty_print_error
 from bpyutils.config			import environment
-from bpyutils import request as req, log, parallel
-from gempy 	import cli
-from bpyutils._compat		    import builtins, iteritems
-from gempy.__attr__      	import __name__
-from gempy.exception      import DependencyNotFoundError
+from bpyutils.exception         import DependencyNotFoundError
+from bpyutils import log, parallel
+from gempy import cli
+from bpyutils._compat		    import iteritems
+from gempy.__attr__      	    import __name__
+from gempy.commands.helper      import (
+    download_refseq,
+    process_faa_file
+)
 
 logger   = log.get_logger(level = log.DEBUG)
 
@@ -36,7 +30,9 @@ ARGUMENTS = dict(
     output						= None,
     ignore_error				= False,
     force						= False,
-    verbose		 				= False
+    verbose		 				= False,
+
+    faa                         = [],
 )
 
 @cli.command
@@ -84,3 +80,18 @@ def _command(*args, **kwargs):
         touch(file_)
     
     logger.info("Using %s jobs..." % a.jobs)
+
+    faas = a.faa or []
+
+    if a.refseq:
+        logger.info("Found RefSeq accession numbers %s..." % a.refseq)
+
+        with parallel.pool(processes = a.jobs) as pool:
+            results = pool.map(download_refseq, a.refseq)
+            faas += results
+
+    if faas:
+        logger.info("Found %s FAA files..." % len(faas))
+
+        with parallel.pool(processes = a.jobs) as pool:
+            pool.map(process_faa_file, faas)

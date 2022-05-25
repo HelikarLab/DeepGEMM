@@ -91,6 +91,18 @@ def get_parser():
         help    = "Show this help message and exit."
     )
 
+    parser.add_argument("--refseq",
+        nargs   = "*",
+        help    = "RefSeq accession number"
+    )
+    parser.add_argument("--faa",
+        nargs   = "*",
+        help    = "FAA (FASTA Amino Acid) file(s)."
+    )
+    parser.add_argument("--output-dir",
+        help    = "Path to output directory."
+    )
+
     return parser
 
 def get_args(args = None, known = True, as_dict = True):
@@ -103,5 +115,5 @@ def get_args(args = None, known = True, as_dict = True):
 
     if as_dict:
         args = args.__dict__
-        
+
     return args
