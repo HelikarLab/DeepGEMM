@@ -14,5 +14,6 @@ PATH["DATA"]  = osp.join(PATH["BASE"], "data")
 PATH["CACHE"] = get_config_path(NAME)
 
 DEFAULT = {
+    "diamond_db": "pdbaa",
     "bigg_model_id": "e_coli_core"
 }
