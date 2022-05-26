@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     container:
       image: ghcr.io/achillesrasquinha/bpyutils
 
@@ -24,11 +25,17 @@ jobs:
 =======
 =======
 >>>>>>> template/master
+=======
+>>>>>>> template/master
     steps:
       - uses: achillesrasquinha/boilpy-action@develop
       - name: Updating template
         run: |
 <<<<<<< HEAD
+<<<<<<< HEAD
+          echo "Updating template..."
+>>>>>>> template/master
+=======
           echo "Updating template..."
 >>>>>>> template/master
 =======

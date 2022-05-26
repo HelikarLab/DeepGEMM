@@ -34,6 +34,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   build-singularity:
     needs:
@@ -58,6 +59,8 @@ jobs:
 
           echo ${GITHUB_TOKEN} | singularity remote login -u ${DOCKER_USERNAME} --password-stdin oras://${DOCKER_REGISTRY}
           singularity push /output/${SINGULARITY_IMAGE} oras://${DOCKER_REGISTRY}/${DOCKER_USERNAME}/${PROJECT}:singularity
+=======
+>>>>>>> template/master
 =======
 >>>>>>> template/master
 =======

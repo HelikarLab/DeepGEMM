@@ -3,7 +3,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 SHELL				   := /bin/bash
+=======
+# SHELL				   := /bin/bash
+>>>>>>> template/master
 =======
 # SHELL				   := /bin/bash
 >>>>>>> template/master
@@ -74,7 +78,11 @@ define log
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@printf "$(BULLET) $($1)[$(TIMESTAMP)]$(CLEAR) $(BOLD)$2$(CLEAR)\n"
+=======
+	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
+>>>>>>> template/master
 =======
 	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
 >>>>>>> template/master
@@ -256,6 +264,7 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # @[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
 
 # if [[ -d "${BASEDIR}/docker/files" ]]; then \
@@ -264,6 +273,8 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 # 	done \
 # fi
 =======
+=======
+>>>>>>> template/master
 =======
 >>>>>>> template/master
 =======
@@ -277,6 +288,9 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 	fi
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 =======
 >>>>>>> template/master

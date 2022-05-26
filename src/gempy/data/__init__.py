@@ -3,6 +3,7 @@ import os.path as osp
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from gempy.config import DEFAULT
 from gempy import __name__ as NAME
 
@@ -48,6 +49,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 >>>>>>> template/master
 =======
 >>>>>>> template/master
+=======
+>>>>>>> template/master
 from gempy.config import PATH
 from gempy import __name__ as NAME
 
@@ -73,6 +76,9 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 =======
 >>>>>>> template/master

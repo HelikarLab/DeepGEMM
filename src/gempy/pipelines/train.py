@@ -5,9 +5,13 @@ def build_model():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     from deeply.model.gan import GAN
 
     model = GAN() 
+=======
+    pass
+>>>>>>> template/master
 =======
     pass
 >>>>>>> template/master

@@ -14,6 +14,11 @@ from setuptools.command.install import install
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> template/master
 =======
 
 

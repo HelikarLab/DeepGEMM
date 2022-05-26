@@ -94,6 +94,7 @@ def get_parser():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     parser.add_argument("--refseq",
         nargs   = "*",
         help    = "RefSeq accession number"
@@ -106,6 +107,8 @@ def get_parser():
         help    = "Path to output directory."
     )
 
+=======
+>>>>>>> template/master
 =======
 >>>>>>> template/master
 =======
@@ -127,7 +130,11 @@ def get_args(args = None, known = True, as_dict = True):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> template/master
 =======
         
 >>>>>>> template/master

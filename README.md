@@ -23,8 +23,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
     </a>
+=======
+		  <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
+	  </a>
+>>>>>>> template/master
 =======
 		  <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
 	  </a>
