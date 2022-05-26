@@ -3,9 +3,13 @@ from gempy.data import get_data_dir
 
 def build_model():
 <<<<<<< HEAD
+<<<<<<< HEAD
     from deeply.model.gan import GAN
 
     model = GAN() 
+=======
+    pass
+>>>>>>> template/master
 =======
     pass
 >>>>>>> template/master

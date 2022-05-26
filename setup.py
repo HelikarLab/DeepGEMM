@@ -12,6 +12,11 @@ from setuptools.command.develop import develop
 from setuptools.command.install import install
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> template/master
 =======
 
 

@@ -1,7 +1,11 @@
 .PHONY: shell test help requirements
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 SHELL				   := /bin/bash
+=======
+# SHELL				   := /bin/bash
+>>>>>>> template/master
 =======
 # SHELL				   := /bin/bash
 >>>>>>> template/master
@@ -64,7 +68,11 @@ define log
 	$(eval TIMESTAMP = $(shell date +%H:%M:%S))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@printf "$(BULLET) $($1)[$(TIMESTAMP)]$(CLEAR) $(BOLD)$2$(CLEAR)\n"
+=======
+	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
+>>>>>>> template/master
 =======
 	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
 >>>>>>> template/master
@@ -238,6 +246,7 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # @[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
 
 # if [[ -d "${BASEDIR}/docker/files" ]]; then \
@@ -246,6 +255,8 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 # 	done \
 # fi
 =======
+=======
+>>>>>>> template/master
 	@[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
 
 	if [[ -d "${BASEDIR}/docker/files" ]]; then \
@@ -253,6 +264,9 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 			docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
 		done \
 	fi
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 
 	@[[ -f "${BASEDIR}/Dockerfile" ]] && docker build $(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)

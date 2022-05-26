@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 FROM  python:3.10
 
 LABEL maintainer=achillesrasquinha@gmail.com
@@ -26,6 +27,8 @@ RUN apt-get update \
 COPY . $GEMPY_PATH
 COPY ./docker/entrypoint.sh /entrypoint.sh
 =======
+=======
+>>>>>>> template/master
 
 
 FROM  python:3.7-alpine
@@ -43,6 +46,9 @@ COPY . $GEMPY_PATH
 COPY ./docker/entrypoint.sh /entrypoint
 RUN sed -i 's/\r//' /entrypoint \
 	&& chmod +x /entrypoint
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 
 WORKDIR $GEMPY_PATH
@@ -51,7 +57,11 @@ RUN pip install -r ./requirements.txt && \
     python setup.py install
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ENTRYPOINT ["/entrypoint.sh"]
+=======
+ENTRYPOINT ["/entrypoint"]
+>>>>>>> template/master
 =======
 ENTRYPOINT ["/entrypoint"]
 >>>>>>> template/master
