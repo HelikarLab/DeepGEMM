@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # imports - module imports
 from bpyutils import log
 
@@ -22,12 +23,18 @@ def process_faa_file(faa):
 =======
 =======
 >>>>>>> template/master
+=======
+>>>>>>> template/master
 # imports - standard imports
 
 # imports - module imports
 from bpyutils import log
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+logger = log.get_logger()
+>>>>>>> template/master
+=======
 logger = log.get_logger()
 >>>>>>> template/master
 =======

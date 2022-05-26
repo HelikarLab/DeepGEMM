@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 FROM  python:3.10
 
 LABEL maintainer=achillesrasquinha@gmail.com
@@ -29,6 +30,8 @@ COPY ./docker/entrypoint.sh /entrypoint.sh
 =======
 =======
 >>>>>>> template/master
+=======
+>>>>>>> template/master
 
 
 FROM  python:3.7-alpine
@@ -47,6 +50,9 @@ COPY ./docker/entrypoint.sh /entrypoint
 RUN sed -i 's/\r//' /entrypoint \
 	&& chmod +x /entrypoint
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 =======
 >>>>>>> template/master
@@ -58,7 +64,11 @@ RUN pip install -r ./requirements.txt && \
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ENTRYPOINT ["/entrypoint.sh"]
+=======
+ENTRYPOINT ["/entrypoint"]
+>>>>>>> template/master
 =======
 ENTRYPOINT ["/entrypoint"]
 >>>>>>> template/master

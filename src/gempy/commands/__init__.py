@@ -3,9 +3,13 @@ from __future__ import absolute_import
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # imports - standard imports
 
 from gempy.commands.util 	    import cli_format
+=======
+from gempy.commands.util 	import cli_format
+>>>>>>> template/master
 =======
 from gempy.commands.util 	import cli_format
 >>>>>>> template/master
@@ -19,6 +23,7 @@ from bpyutils.config			import environment
 from bpyutils.exception         import DependencyNotFoundError
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from bpyutils import log, parallel
 from gempy import cli
 from bpyutils._compat		    import iteritems
@@ -30,11 +35,16 @@ from gempy.commands.helper      import (
 =======
 =======
 >>>>>>> template/master
+=======
+>>>>>>> template/master
 from bpyutils import log
 from gempy 	import cli
 from bpyutils._compat		    import iteritems
 from gempy.__attr__ import __name__
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 =======
 >>>>>>> template/master
@@ -53,9 +63,13 @@ ARGUMENTS = dict(
     force						= False,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     verbose		 				= False,
 
     faa                         = [],
+=======
+    verbose		 				= False
+>>>>>>> template/master
 =======
     verbose		 				= False
 >>>>>>> template/master
@@ -110,6 +124,7 @@ def _command(*args, **kwargs):
     
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     logger.info("Using %s jobs..." % a.jobs)
 
     faas = a.faa or []
@@ -126,6 +141,9 @@ def _command(*args, **kwargs):
 
         with parallel.pool(processes = a.jobs) as pool:
             pool.map(process_faa_file, faas)
+=======
+    logger.info("Using %s jobs..." % a.jobs)
+>>>>>>> template/master
 =======
     logger.info("Using %s jobs..." % a.jobs)
 >>>>>>> template/master

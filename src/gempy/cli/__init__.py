@@ -2,11 +2,14 @@
 from bpyutils.cli.util     import *
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from gempy.cli.parser      import get_args
 from bpyutils.util._dict   import merge_dict
 from bpyutils.util.types   import get_function_arguments
 
 =======
+=======
+>>>>>>> template/master
 =======
 >>>>>>> template/master
 from gempy.cli.parser import get_args
@@ -15,6 +18,9 @@ from bpyutils.util.types   import get_function_arguments
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> template/master
+=======
 >>>>>>> template/master
 =======
 >>>>>>> template/master
