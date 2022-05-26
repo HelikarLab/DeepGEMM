@@ -1,6 +1,10 @@
 .PHONY: shell test help requirements
 
+<<<<<<< HEAD
 SHELL				   := /bin/bash
+=======
+# SHELL				   := /bin/bash
+>>>>>>> template/master
 
 BASEDIR					= $(shell pwd)
 -include ${BASEDIR}/.env
@@ -59,7 +63,11 @@ define log
 	$(eval BULLET 	 = "→")
 	$(eval TIMESTAMP = $(shell date +%H:%M:%S))
 
+<<<<<<< HEAD
 	@printf "$(BULLET) $($1)[$(TIMESTAMP)]$(CLEAR) $(BOLD)$2$(CLEAR)\n"
+=======
+	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
+>>>>>>> template/master
 endef
 
 define browse
@@ -229,6 +237,7 @@ docker-pull: ## Pull Latest Docker Images
 docker-build: clean docker-pull requirements ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
+<<<<<<< HEAD
 # @[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
 
 # if [[ -d "${BASEDIR}/docker/files" ]]; then \
@@ -236,6 +245,15 @@ docker-build: clean docker-pull requirements ## Build the Docker Image.
 # 		docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
 # 	done \
 # fi
+=======
+	@[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
+
+	if [[ -d "${BASEDIR}/docker/files" ]]; then \
+		for folder in `ls ${BASEDIR}/docker/files`; do \
+			docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
+		done \
+	fi
+>>>>>>> template/master
 
 	@[[ -f "${BASEDIR}/Dockerfile" ]] && docker build $(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)
 
