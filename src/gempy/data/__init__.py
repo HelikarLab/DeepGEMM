@@ -1,5 +1,6 @@
 import os.path as osp
 
+<<<<<<< HEAD
 from gempy.config import DEFAULT
 from gempy import __name__ as NAME
 
@@ -40,4 +41,29 @@ def get_data(data_dir = None, check = False, *args, **kwargs):
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir = data_dir)
+=======
+from gempy.config import PATH
+from gempy import __name__ as NAME
+
+from bpyutils.util.environ import getenv
+from bpyutils.util.system  import makedirs
+
+_PREFIX = NAME.upper()
+
+def get_data_dir(data_dir = None):
+    data_dir = data_dir \
+        or getenv("DATA_DIR", prefix = _PREFIX) \
+        or osp.join(PATH["CACHE"], "data")
+
+    makedirs(data_dir, exist_ok = True)
+
+    return data_dir
+
+def get_data(data_dir = None, check = False, *args, **kwargs):
+    data_dir = get_data_dir(data_dir)
+    # do something ...
+
+def preprocess_data(data_dir = None, check = False, *args, **kwargs):
+    data_dir = get_data_dir(data_dir)
+>>>>>>> template/master
     # do something ...

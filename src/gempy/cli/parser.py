@@ -91,6 +91,7 @@ def get_parser():
         help    = "Show this help message and exit."
     )
 
+<<<<<<< HEAD
     parser.add_argument("--refseq",
         nargs   = "*",
         help    = "RefSeq accession number"
@@ -103,6 +104,8 @@ def get_parser():
         help    = "Path to output directory."
     )
 
+=======
+>>>>>>> template/master
     return parser
 
 def get_args(args = None, known = True, as_dict = True):
@@ -115,5 +118,9 @@ def get_args(args = None, known = True, as_dict = True):
 
     if as_dict:
         args = args.__dict__
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> template/master
     return args

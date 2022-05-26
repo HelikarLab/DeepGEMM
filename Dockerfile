@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM  python:3.10
 
 LABEL maintainer=achillesrasquinha@gmail.com
@@ -24,12 +25,35 @@ RUN apt-get update \
 
 COPY . $GEMPY_PATH
 COPY ./docker/entrypoint.sh /entrypoint.sh
+=======
+
+
+FROM  python:3.7-alpine
+
+LABEL maintainer=achillesrasquinha@gmail.com
+
+ENV GEMPY_PATH=/usr/local/src/gempy
+
+RUN apk add --no-cache \
+        bash \
+        git \
+    && mkdir -p $GEMPY_PATH
+
+COPY . $GEMPY_PATH
+COPY ./docker/entrypoint.sh /entrypoint
+RUN sed -i 's/\r//' /entrypoint \
+	&& chmod +x /entrypoint
+>>>>>>> template/master
 
 WORKDIR $GEMPY_PATH
 
 RUN pip install -r ./requirements.txt && \
     python setup.py install
 
+<<<<<<< HEAD
 ENTRYPOINT ["/entrypoint.sh"]
+=======
+ENTRYPOINT ["/entrypoint"]
+>>>>>>> template/master
 
 CMD ["gempy"]

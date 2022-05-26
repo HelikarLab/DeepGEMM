@@ -7,8 +7,15 @@ jobs:
   template:
     name: Template
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/achillesrasquinha/bpyutils
+
     steps:
-      - uses: achillesrasquinha/boilpy-action@develop
+      - uses: actions/checkout@v3
+      - name: Show ref
+        run: |
+          echo "Checking out $GITHUB_REF..."
       - name: Updating template
         run: |
           echo "Updating template..."
+          bpyutils --update-boilpy-project $GITHUB_WORKSPACE
