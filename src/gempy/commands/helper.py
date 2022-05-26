@@ -15,5 +15,5 @@ def download_refseq(id_):
     return filepath
 
 def process_faa_file(faa):
-    blast = BLAST()
-    blast.blastp()
+    blast   = BLAST()
+    results = blast.blastp(faa)
