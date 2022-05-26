@@ -20,8 +20,8 @@
       <img src="https://img.shields.io/pypi/l/gempy.svg?style=flat-square">
     </a>
     <a href="https://pypi.org/project/gempy/">
-		  <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
-	  </a>
+      <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
+    </a>
     <a href="https://git.io/boilpy">
       <img src="https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square">
     </a>

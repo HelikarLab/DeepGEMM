@@ -1,7 +1,7 @@
 from cobra.core.model import Model as COBRAPyModel
 
-from gempy.cobra.optimization import Problem
-from gempy.cobra.util import create_sparse_stoichiometric_matrix
+from gempy.integrations.cobra.optimization import Problem
+from gempy.integrations.cobra.util import create_sparse_stoichiometric_matrix
 
 class Model(COBRAPyModel):
     def __init__(self, *args, **kwargs):

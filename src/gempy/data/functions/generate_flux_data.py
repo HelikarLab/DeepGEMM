@@ -15,7 +15,6 @@ from bpyutils.util._csv    import write as write_csv
 from bpyutils              import log, parallel
 
 import cobra
-from cobra.flux_analysis.variability import find_essential_reactions
 import optlang
 
 from gempy import settings
