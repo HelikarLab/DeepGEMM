@@ -4,7 +4,7 @@ from bpyutils.model.base import BaseObject
 from bpyutils.config import get_config_path
 from bpyutils.util.system import makedirs, popen
 
-from gempy.__attr__ import name as NAME
+from gempy.__attr__ import __name__ as NAME
 from gempy.config import DEFAULT
 
 def _download_blast_db(name, path):
