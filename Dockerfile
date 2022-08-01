@@ -12,6 +12,10 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         bash \
         git \
+        cmake \
+        swig \
+        libglpk-dev \
+        glpk-utils \
     && mkdir -p $GEMPY_PATH \
     && wget http://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-${BLAST_PLUS_VERSION}+-x64-linux.tar.gz -O /blast_plus.tar.gz \
     && tar xzf /blast_plus.tar.gz \
