@@ -1,7 +1,6 @@
 sphinx
 recommonmark
 sphinx-autobuild
-
 ipykernel
 nbsphinx
 pylint
@@ -18,7 +17,7 @@ docstr-coverage
 bioservices
 requests
 git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
-git+https://github.com/achillesrasquinha/deeply@develop#egg=deeply
+git+https://github.com/achillesrasquinha/deeply@aarch64#egg=deeply
 pipenv
 jedi<0.18
 ipython

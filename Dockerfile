@@ -1,4 +1,6 @@
-FROM  python:3.10
+FROM  python:3.9
+
+ARG DEVELOPMENT=false
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
@@ -27,9 +29,16 @@ COPY ./docker/entrypoint.sh /entrypoint.sh
 
 WORKDIR $GEMPY_PATH
 
-RUN pip install -r ./requirements.txt && \
-    python setup.py install
+SHELL ["/bin/bash", "-c"]
 
+RUN if [[ "${DEVELOPMENT}" ]]; then \
+        pip install -r ./requirements-dev.txt; \
+        python setup.py develop; \
+    else \
+        pip install -r ./requirements.txt; \
+        python setup.py install; \
+    fi
+    
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["gempy"]
