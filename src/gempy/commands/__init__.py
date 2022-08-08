@@ -31,7 +31,6 @@ ARGUMENTS = dict(
     ignore_error				= False,
     force						= False,
     verbose		 				= False,
-
     faa                         = [],
 )
 

@@ -5,6 +5,7 @@ on: [push, pull_request]
 env:
   COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  PIP_ARGS: "--use-deprecated=legacy-resolver"
 
   ENVIRONMENT: test
   VERBOSE: true
