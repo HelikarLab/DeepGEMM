@@ -1,0 +1,9 @@
+.git
+.venv
+.vscode
+ci
+docker/gempy
+.env
+.gitignore
+.releasrc
+Makefile
