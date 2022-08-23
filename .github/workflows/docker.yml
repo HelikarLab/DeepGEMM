@@ -25,12 +25,19 @@ jobs:
       - name: Login to Registry
         run: |
           echo $GITHUB_TOKEN | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
+<<<<<<< HEAD
+=======
+      - name: Pull latest image
+        run: |
+          make docker-pull
+>>>>>>> template/master
       - name: Build Image
         run: |
           make docker-build
       - name: Push Image
         run: |
           make docker-push
+<<<<<<< HEAD
 
   build-singularity:
     needs:
@@ -55,3 +62,5 @@ jobs:
 
           echo ${GITHUB_TOKEN} | singularity remote login -u ${DOCKER_USERNAME} --password-stdin oras://${DOCKER_REGISTRY}
           singularity push /output/${SINGULARITY_IMAGE} oras://${DOCKER_REGISTRY}/${DOCKER_USERNAME}/${PROJECT}:singularity
+=======
+>>>>>>> template/master

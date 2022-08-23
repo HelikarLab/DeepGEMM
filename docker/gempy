@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 docker run --rm -it achillesrasquinha/gempy "$@"
+=======
+docker run --rm -it /gempy "$@"
+>>>>>>> template/master

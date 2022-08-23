@@ -5,7 +5,10 @@ on: [push, pull_request]
 env:
   COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+<<<<<<< HEAD
   PIP_ARGS: "--use-deprecated=legacy-resolver"
+=======
+>>>>>>> template/master
 
   ENVIRONMENT: test
   VERBOSE: true
@@ -20,7 +23,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+<<<<<<< HEAD
         python-version: [3.7, 3.8, 3.9]
+=======
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+>>>>>>> template/master
 
     steps:
       - uses: actions/checkout@v2

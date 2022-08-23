@@ -1,12 +1,27 @@
+<<<<<<< HEAD
 from __future__ import absolute_import
 
+=======
+
+
+
+from __future__ import absolute_import
+
+
+>>>>>>> template/master
 import sys
 import os, os.path as osp
 import subprocess
 
 PY2 = sys.version_info.major == 2
 
+<<<<<<< HEAD
 if PY2:
+=======
+    
+if PY2:
+    
+>>>>>>> template/master
     FileNotFoundError = OSError
 
 def read(fname):
@@ -64,9 +79,17 @@ __name__                    = "gempy"
 __command__                 = "gempy"
 __version__                 = read(osp.join(pardir(__file__), "VERSION"))
 __build__                   = get_revision(pardir(__file__, 2), short = True, raise_err = False)
+<<<<<<< HEAD
 __author__                  = "Achilles Rasquinha"
 __email__                   = "achillesrasquinha@gmail.com"
 __description__             = "Genome-Scale Metabolic Modelling"
 __keywords__                = ['genome-scale', 'metabolic', 'modelling']
 __url__                     = "https://github.com/achillesrasquinha/gempy"
+=======
+__author__                  = ""
+__email__                   = ""
+__description__             = ""
+__keywords__                = []
+__url__                     = "https://github.com//gempy"
+>>>>>>> template/master
 __license__                 = "MIT License"
