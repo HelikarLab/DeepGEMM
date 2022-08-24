@@ -33,6 +33,8 @@ PYLINT					= ${VENVBIN}pylint
 
 JUPYTER					= ${VENVBIN}jupyter
 
+DOCKER_COMPOSE			= ${VENVBIN}docker-compose
+
 SAFETY					= ${VENVBIN}safety
 PRECOMMIT				= ${VENVBIN}pre-commit
 SPHINXBUILD				= ${VENVBIN}sphinx-build
@@ -230,8 +232,10 @@ docker-pull: ## Pull Latest Docker Images
 docker-build: clean docker-pull requirements ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
-	@[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
-
+	if [[ -f "${BASEDIR}/docker-compose.yml" ]]; then \
+		$(DOCKER_COMPOSE) build; \
+	fi
+	
 	if [[ -d "${BASEDIR}/docker/files" ]]; then \
 		for folder in `ls ${BASEDIR}/docker/files`; do \
 			docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
