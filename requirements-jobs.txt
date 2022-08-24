@@ -15,6 +15,7 @@ coveralls
 pluggy<1,>=0.12.0
 docstr-coverage
 bioservices
+tqdm
 requests
 git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
 git+https://github.com/achillesrasquinha/deeply@develop#egg=deeply
