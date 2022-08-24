@@ -9,8 +9,6 @@ jobs:
   train:
     name: Train
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/achillesrasquinha/dl
 
     steps:
       - uses: actions/checkout@v2

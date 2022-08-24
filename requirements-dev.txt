@@ -17,7 +17,7 @@ docstr-coverage
 bioservices
 tqdm
 requests
-git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
+bpyutils
 git+https://github.com/achillesrasquinha/deeply@develop#egg=deeply
 cobra
 pipenv
