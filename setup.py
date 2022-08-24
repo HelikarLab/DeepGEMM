@@ -11,11 +11,6 @@ from setuptools import setup, find_packages
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> template/master
 # import pip
 
 # try:
@@ -35,21 +30,13 @@ def parse_requirements(filename, session = None):
             
     def sanitize_line(line):
         if "git+" in line:
-<<<<<<< HEAD
-=======
             line = line.replace("git+", "")
 
->>>>>>> template/master
             if "#egg=" in line:
                 _, name = line.split("#egg=")
                 name    = name.strip()
                 line    = "%s @ %s" % (name, line)
 
-<<<<<<< HEAD
-                print(line)
-
-=======
->>>>>>> template/master
         line = line.strip()
 
         return line

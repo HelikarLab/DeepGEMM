@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 bioservices
 requests
 git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
 git+https://github.com/achillesrasquinha/deeply@aarch64#egg=deeply
 cobra
-=======
-
-bpyutils
->>>>>>> template/master

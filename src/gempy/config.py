@@ -11,13 +11,9 @@ PATH = dict()
 
 PATH["BASE"]  = pardir(__file__, 1)
 PATH["DATA"]  = osp.join(PATH["BASE"], "data")
-<<<<<<< HEAD
 PATH["CACHE"] = get_config_path(NAME)
 
 DEFAULT = {
     "diamond_db": "pdbaa",
     "bigg_model_id": "e_coli_core"
 }
-=======
-PATH["CACHE"] = get_config_path(NAME)
->>>>>>> template/master

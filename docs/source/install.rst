@@ -15,21 +15,13 @@ For instructions on installing python and pip see “The Hitchhiker’s Guide to
 
 #### Building from source
 
-<<<<<<< HEAD
 `gempy` is actively developed on [https://github.com](https://github.com/achillesrasquinha/gempy)
-=======
-`gempy` is actively developed on [https://github.com](https://github.com//gempy)
->>>>>>> template/master
 and is always avaliable.
 
 You can clone the base repository with git as follows:
 
 ```shell
-<<<<<<< HEAD
 $ git clone https://github.com/achillesrasquinha/gempy
-=======
-$ git clone https://github.com//gempy
->>>>>>> template/master
 ```
 
 Optionally, you could download the tarball or zipball as follows:
@@ -37,21 +29,13 @@ Optionally, you could download the tarball or zipball as follows:
 ##### For Linux Users
 
 ```shell
-<<<<<<< HEAD
 $ curl -OL https://github.com/achillesrasquinha/tarball/gempy
-=======
-$ curl -OL https://github.com//tarball/gempy
->>>>>>> template/master
 ```
 
 ##### For Windows Users
 
 ```shell
-<<<<<<< HEAD
 $ curl -OL https://github.com/achillesrasquinha/zipball/gempy
-=======
-$ curl -OL https://github.com//zipball/gempy
->>>>>>> template/master
 ```
 
 Install necessary dependencies
@@ -67,7 +51,7 @@ Then, go ahead and install gempy in your site-packages as follows:
 $ python setup.py install
 ```
 
-Check to see if you’ve installed gempy correctly.
+Check to see if you've installed gempy correctly.
 
 ```shell
 $ gempy --help

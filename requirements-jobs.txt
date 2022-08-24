@@ -1,15 +1,10 @@
 sphinx
 recommonmark
 sphinx-autobuild
-<<<<<<< HEAD
-=======
-
->>>>>>> template/master
 ipykernel
 nbsphinx
 pylint
 autopep8
-<<<<<<< HEAD
 pytest
 pytest-cov
 pytest-xdist
@@ -24,8 +19,6 @@ requests
 git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
 git+https://github.com/achillesrasquinha/deeply@aarch64#egg=deeply
 cobra
-=======
->>>>>>> template/master
 pipenv
 jedi<0.18
 ipython
@@ -38,17 +31,3 @@ twine
 jupyter
 
 Flask
-<<<<<<< HEAD
-=======
-pytest
-pytest-cov
-pytest-xdist
-pytest-sugar
-pytest-clarity; python_version >= '3.6'
-tox
-coveralls
-pluggy<1,>=0.12.0
-docstr-coverage
-
-bpyutils
->>>>>>> template/master

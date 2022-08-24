@@ -1,7 +1,6 @@
 # imports - compatibility imports
 from __future__ import absolute_import
 
-<<<<<<< HEAD
 # imports - module imports
 from bpyutils import log
 
@@ -18,11 +17,3 @@ def download_refseq(id_):
 def process_faa_file(faa):
     blast   = BLAST()
     results = blast.blastp(faa)
-=======
-# imports - standard imports
-
-# imports - module imports
-from bpyutils import log
-
-logger = log.get_logger()
->>>>>>> template/master

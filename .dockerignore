@@ -3,15 +3,11 @@
 .vscode
 ci
 docker/gempy
-<<<<<<< HEAD
 .appveyor.yml
 .env
 .gitignore
 .releasrc
 .travis.yml
-=======
 .env
-.gitignore
 .releasrc
->>>>>>> template/master
 Makefile

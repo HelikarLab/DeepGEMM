@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 FROM  python:3.9
-=======
-
-
-FROM  python:3.7-alpine
->>>>>>> template/master
 
 ARG DEVELOPMENT=false
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
-<<<<<<< HEAD
 ENV GEMPY_PATH=/usr/local/src/gempy \
     DIAMOND_VERSION=2.0.13 \
     BLAST_PLUS_VERSION=2.13.0 
@@ -42,22 +35,6 @@ WORKDIR $GEMPY_PATH
 
 SHELL ["/bin/bash", "-c"]
 
-=======
-ENV GEMPY_PATH=/usr/local/src/gempy
-
-RUN apk add --no-cache \
-        bash \
-        git \
-    && mkdir -p $GEMPY_PATH
-
-COPY . $GEMPY_PATH
-COPY ./docker/entrypoint.sh /entrypoint
-RUN sed -i 's/\r//' /entrypoint \
-	&& chmod +x /entrypoint
-
-WORKDIR $GEMPY_PATH
-
->>>>>>> template/master
 RUN if [[ "${DEVELOPMENT}" ]]; then \
         pip install -r ./requirements-dev.txt; \
         python setup.py develop; \
@@ -65,12 +42,7 @@ RUN if [[ "${DEVELOPMENT}" ]]; then \
         pip install -r ./requirements.txt; \
         python setup.py install; \
     fi
-<<<<<<< HEAD
     
 ENTRYPOINT ["/entrypoint.sh"]
-=======
-
-ENTRYPOINT ["/entrypoint"]
->>>>>>> template/master
 
 CMD ["gempy"]

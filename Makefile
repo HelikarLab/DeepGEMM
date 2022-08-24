@@ -1,10 +1,6 @@
 .PHONY: shell test help requirements
 
-<<<<<<< HEAD
 SHELL				   := /bin/bash
-=======
-# SHELL				   := /bin/bash
->>>>>>> template/master
 
 BASEDIR					= $(shell pwd)
 -include ${BASEDIR}/.env
@@ -33,10 +29,7 @@ TOX						= ${VENVBIN}tox
 COVERALLS			   ?= ${VENVBIN}coveralls
 DOCSTR_COVERAGE		   ?= ${VENVBIN}docstr-coverage
 IPYTHON					= ${VENVBIN}ipython
-<<<<<<< HEAD
-=======
 PYLINT					= ${VENVBIN}pylint
->>>>>>> template/master
 
 JUPYTER					= ${VENVBIN}jupyter
 
@@ -67,11 +60,7 @@ define log
 	$(eval BULLET 	 = "→")
 	$(eval TIMESTAMP = $(shell date +%H:%M:%S))
 
-<<<<<<< HEAD
-	@printf "$(BULLET) $($1)[$(TIMESTAMP)]$(CLEAR) $(BOLD)$2$(CLEAR)\n"
-=======
 	@printf "${BULLET} ${$1}[${TIMESTAMP}]${CLEAR} ${BOLD}$2${CLEAR}\n"
->>>>>>> template/master
 endef
 
 define browse
@@ -241,18 +230,6 @@ docker-pull: ## Pull Latest Docker Images
 docker-build: clean docker-pull requirements ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
-<<<<<<< HEAD
-# @[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
-
-# if [[ -d "${BASEDIR}/docker/files" ]]; then \
-# 	for folder in `ls ${BASEDIR}/docker/files`; do \
-# 		docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
-# 	done \
-# fi
-
-	@[[ -f "${BASEDIR}/Dockerfile" ]] && docker build $(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)
-
-=======
 	@[[ -f "${BASEDIR}/docker-compose.yml" ]] && docker-compose build
 
 	if [[ -d "${BASEDIR}/docker/files" ]]; then \
@@ -268,7 +245,6 @@ docker-test: clean ## Testing within Docker Image.
 	
 	@docker run --rm -it $(DOCKER_IMAGE) "tox"
 
->>>>>>> template/master
 docker-push: ## Push Docker Image to Registry.
 	@docker push $(DOCKER_IMAGE) --all-tags
 
@@ -307,11 +283,8 @@ notebooks: ## Launch Notebooks
 	$(JUPYTER) notebook --notebook-dir $(NOTEBOOKSDIR) $(ARGS)
 
 
-<<<<<<< HEAD
-=======
 lint: ## Perform Lint
 	$(PYLINT) $(PROJDIR) --output-format=colorized
 
->>>>>>> template/master
 help: ## Show help and exit.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)

@@ -1,19 +1,14 @@
 # imports - compatibility imports
 from __future__ import absolute_import
 
-<<<<<<< HEAD
 # imports - standard imports
 
 from gempy.commands.util 	    import cli_format
-=======
-from gempy.commands.util 	import cli_format
->>>>>>> template/master
 from bpyutils.util._dict        import merge_dict
 from bpyutils.util.system   	import (touch)
 from bpyutils.util.error        import pretty_print_error
 from bpyutils.config			import environment
 from bpyutils.exception         import DependencyNotFoundError
-<<<<<<< HEAD
 from bpyutils import log, parallel
 from gempy import cli
 from bpyutils._compat		    import iteritems
@@ -22,12 +17,6 @@ from gempy.commands.helper      import (
     download_refseq,
     process_faa_file
 )
-=======
-from bpyutils import log
-from gempy 	import cli
-from bpyutils._compat		    import iteritems
-from gempy.__attr__ import __name__
->>>>>>> template/master
 
 logger   = log.get_logger(level = log.DEBUG)
 
@@ -41,12 +30,8 @@ ARGUMENTS = dict(
     output						= None,
     ignore_error				= False,
     force						= False,
-<<<<<<< HEAD
     verbose		 				= False,
     faa                         = [],
-=======
-    verbose		 				= False
->>>>>>> template/master
 )
 
 @cli.command
@@ -93,7 +78,6 @@ def _command(*args, **kwargs):
         logger.info("Writing to output file %s..." % file_)
         touch(file_)
     
-<<<<<<< HEAD
     logger.info("Using %s jobs..." % a.jobs)
 
     faas = a.faa or []
@@ -110,6 +94,3 @@ def _command(*args, **kwargs):
 
         with parallel.pool(processes = a.jobs) as pool:
             pool.map(process_faa_file, faas)
-=======
-    logger.info("Using %s jobs..." % a.jobs)
->>>>>>> template/master

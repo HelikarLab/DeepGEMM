@@ -3,7 +3,6 @@
   <h1>
       gempy
   </h1>
-<<<<<<< HEAD
   <h4>Genome-Scale Metabolic Modelling</h4>
 </div>
 
@@ -13,17 +12,6 @@
     </a>
     <a href="https://coveralls.io/github/achillesrasquinha/gempy">
       <img src="https://img.shields.io/coveralls/github/achillesrasquinha/gempy.svg?style=flat-square">
-=======
-  <h4></h4>
-</div>
-
-<p align="center">
-    <a href='https://github.com//gempy//actions?query=workflow:"Continuous Integration"'>
-      <img src="https://img.shields.io/github/workflow/status//gempy/Continuous Integration?style=flat-square">
-    </a>
-    <a href="https://coveralls.io/github//gempy">
-      <img src="https://img.shields.io/coveralls/github//gempy.svg?style=flat-square">
->>>>>>> template/master
     </a>
     <a href="https://pypi.org/project/gempy/">
       <img src="https://img.shields.io/pypi/v/gempy.svg?style=flat-square">
@@ -32,13 +20,8 @@
       <img src="https://img.shields.io/pypi/l/gempy.svg?style=flat-square">
     </a>
     <a href="https://pypi.org/project/gempy/">
-<<<<<<< HEAD
       <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
     </a>
-=======
-		  <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
-	  </a>
->>>>>>> template/master
     <a href="https://git.io/boilpy">
       <img src="https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square">
     </a>
@@ -76,11 +59,7 @@ Check out [installation](docs/source/install.rst) for more details.
 $ gempy
 Usage: gempy [OPTIONS] COMMAND [ARGS]...
 
-<<<<<<< HEAD
   Genome-Scale Metabolic Modelling
-=======
-  
->>>>>>> template/master
 
 Options:
   --version   Show the version and exit.
@@ -100,11 +79,7 @@ Using `gempy's` Docker Image can be done as follows:
 $ docker run \
     --rm \
     -it \
-<<<<<<< HEAD
     achillesrasquinha/gempy \
-=======
-    /gempy \
->>>>>>> template/master
       --verbose
 ```
 
