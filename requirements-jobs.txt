@@ -19,6 +19,7 @@ requests
 git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
 git+https://github.com/achillesrasquinha/deeply@aarch64#egg=deeply
 cobra
+typing-extensions>=3.7.4.3
 pipenv
 jedi<0.18
 ipython
