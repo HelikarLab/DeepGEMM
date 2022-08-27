@@ -37,7 +37,7 @@ from deeply.losses        import dice_loss
 
 from bpyutils.util.ml     import get_data_dir
 
-from gempy import dops, settings, __name__ as NAME
+from gempy import settings, __name__ as NAME
 
 def build_model(artifacts_path = None):
     # dropout_rate  = settings.get("dropout_rate")

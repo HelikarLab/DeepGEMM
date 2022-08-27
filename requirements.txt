@@ -1,6 +1,7 @@
 bioservices
 tqdm
 requests
-bpyutils
-git+https://github.com/achillesrasquinha/deeply@develop#egg=deeply
+git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
+git+https://github.com/achillesrasquinha/deeply@tflow-m1#egg=deeply
 cobra
+wandb

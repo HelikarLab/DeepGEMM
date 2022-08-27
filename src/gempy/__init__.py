@@ -28,9 +28,12 @@ import deeply
 from bpyutils.cache       import Cache
 from bpyutils.config      import Settings
 from bpyutils.util.jobs   import run_all as run_all_jobs, run_job
+from bpyutils import log
 
 cache = Cache(dirname = __name__)
 cache.create()
+
+logger   = log.get_logger(__name__)
 
 settings = Settings(location = PATH["CACHE"], defaults = {
     "jobs":                 DEFAULT["jobs"],
@@ -45,5 +48,8 @@ def get_version_str():
     version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
     return version
 
-dops = deeply.ops.service("wandb")
-dops.init("gempy")
+try:
+    dops = deeply.ops.service("wandb")
+    dops.init("gempy")
+except:
+    logger.warning("wandb not available")
