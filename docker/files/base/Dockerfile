@@ -1,4 +1,4 @@
-FROM ghcr.io/achillesrasquinha/deeply:latest
+FROM ghcr.io/achillesrasquinha/deeply:tflow-m1
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
