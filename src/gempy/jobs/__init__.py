@@ -1,3 +1,3 @@
 jobs = [{
-    "name": "generate_models"
+    "name": "generate_data"
 }]
