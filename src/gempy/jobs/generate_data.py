@@ -49,11 +49,11 @@ def save_and_publish(repo_dir, data_dir, target_path):
             logger.warn("Couldn't find data directory: %s" % data_dir)
 
 def run(*args, **kwargs):
+    logger.info("Generating data...")
+
     jobs  = kwargs.get("jobs",  CPU_COUNT)
     check = kwargs.get("check", False)
     gen_flux_data = kwargs.get("gen_flux_data", True)
-
-    logger.info("Generating data...")
 
     PATH_CACHE  = get_config_path(NAME)
 
@@ -65,6 +65,8 @@ def run(*args, **kwargs):
     github_oauth_token = getenv("JOBS_GITHUB_OAUTH_TOKEN", prefix = NAME.upper(), raise_err = True)
 
     url  = "https://github.com/achillesrasquinha/gempy"
+
+    logger.info("Updating repo...")
 
     update_git_repo(repo, clone = True, url = url,
         username = github_username, password = github_oauth_token,
@@ -80,11 +82,14 @@ def run(*args, **kwargs):
         makedirs(models_dir)
 
         if osp.exists(path_data):
-            extract_all(path_data, data_dir)
+            logger.info("Extracting previous data...")
+            extract_all(path_data, tmp_dir)
+
+        logger.info("Beginning save_and_publsih thread...")
 
         save_and_publish_thread = threading.Thread(target = save_and_publish,
             name = "save_and_publish", kwargs = { "repo_dir": repo,
-                "data_dir": data_dir, "target_path": path_data })
+                "data_dir": tmp_dir, "target_path": path_data })
         save_and_publish_thread.start()
 
         fetch_models(data_dir = models_dir, check = check, gen_flux_data = gen_flux_data,

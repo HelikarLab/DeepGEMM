@@ -11,7 +11,10 @@ from bpyutils.util.system  import (
 from bpyutils.util.array   import flatten
 from bpyutils.util.types   import lmap, build_fn
 from bpyutils.util.string  import get_random_str
-from bpyutils.util._csv    import write as write_csv
+from bpyutils.util._csv    import (
+    read as read_csv,
+    write as write_csv
+)
 from bpyutils              import log, parallel
 
 import cobra
@@ -19,7 +22,7 @@ import optlang
 
 from gempy import settings
 
-logger = log.get_logger()
+logger = log.get_logger(name = NAME)
 
 CSV_HEADER_PRE  = []
 CSV_HEADER_POST = ["objective_value"]
@@ -89,7 +92,8 @@ def optimize_model_and_save(model, output, **kwargs):
     if solution.status != optlang.interface.INFEASIBLE:
         objective_value = solution.objective_value
 
-        row = []
+        if osp.exists(output):
+            row = read_csv(output)
 
         for reaction in model.reactions:
             row += reaction.bounds
