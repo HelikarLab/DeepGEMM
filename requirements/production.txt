@@ -1,6 +1,6 @@
 bioservices
 tqdm
 requests
-git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
+-e git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 cobra
 wandb
