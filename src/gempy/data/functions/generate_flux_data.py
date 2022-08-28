@@ -93,7 +93,7 @@ def optimize_model_and_save(model, output, **kwargs):
         objective_value = solution.objective_value
 
         if osp.exists(output):
-            row = read_csv(output, type_ = "row")
+            row = read_csv(output, type = "row")
 
         for reaction in model.reactions:
             row += reaction.bounds
