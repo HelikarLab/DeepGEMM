@@ -108,10 +108,10 @@ STRATEGIES = [
 ]
 
 def generate_flux_data(sbml_path, **kwargs):
-    jobs = kwargs.get("jobs", settings.get("jobs"))
+    jobs  = kwargs.get("jobs", settings.get("jobs"))
     data_dir = get_data_dir(NAME, kwargs.get("data_dir"))
 
-    model    = None
+    model = None
 
     logger.info("Generating flux data for model at path: %s" % sbml_path)
 
