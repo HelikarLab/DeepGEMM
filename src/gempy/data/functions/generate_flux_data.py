@@ -92,6 +92,8 @@ def optimize_model_and_save(model, output, **kwargs):
     if solution.status != optlang.interface.INFEASIBLE:
         objective_value = solution.objective_value
 
+        row = []
+
         for reaction in model.reactions:
             row += reaction.bounds
 

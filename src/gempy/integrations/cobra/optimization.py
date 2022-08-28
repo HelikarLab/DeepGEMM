@@ -30,21 +30,15 @@ def _get_obj_coeff_arr(model):
 
     r_index     = reactions.index
 
-    for _, objective in iteritems(model.objectives):
-        for variable in objective.variables:
-            name = variable.name
-
-            if "reverse" not in name:
-                reaction = reactions.get_by_id(name)
-
-                matrix[r_index(reaction), 0]     = 1
-                matrix[r_index(reaction) + 1, 0] = -1
+    for reaction_id, reaction in iteritems(model.objectives):
+        matrix[r_index(reaction_id),     0] =  1
+        matrix[r_index(reaction_id) + 1, 0] = -1
 
     return matrix
 
 class OptimizationProblem(PyMOOProblem):
     def __init__(self, *args, **kwargs):
-        model       = kwargs["model"]
+        model = kwargs["model"]
 
         self._super = super(OptimizationProblem, self)
         self._super.__init__(
@@ -55,7 +49,7 @@ class OptimizationProblem(PyMOOProblem):
             xb          = _get_bounds(model, "upper")
         , *args, **kwargs)
 
-        self._model     = model
+        self._model = model
 
     @property
     def model(self):
