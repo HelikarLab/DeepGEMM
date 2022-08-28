@@ -87,13 +87,13 @@ def randomize_reaction_bounds(model, output):
             optimize_model_and_save(model, output)
 
 def optimize_model_and_save(model, output, **kwargs):
-    solution  = model.optimize()
+    solution = model.optimize()
 
     if solution.status != optlang.interface.INFEASIBLE:
         objective_value = solution.objective_value
 
         if osp.exists(output):
-            row = read_csv(output)
+            row = read_csv(output, type_ = "row")
 
         for reaction in model.reactions:
             row += reaction.bounds

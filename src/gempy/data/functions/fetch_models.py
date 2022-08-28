@@ -49,6 +49,10 @@ def fetch_bigg_models(data_dir = None, check = False, *args, **kwargs):
             flux_data_dir = flux_data_dir)
         pool.map(function_, model_ids)
 
+def fetch_biomodels(data_dir = None, check = False, *args, **kwargs):
+    pass
+
 def fetch_models(data_dir = None, check = False, *args, **kwargs):
     logger.info("Fetching models...")
     fetch_bigg_models(data_dir = data_dir, check = check, *args, **kwargs)
+    fetch_biomodels(data_dir = data_dir, check = check, *args, **kwargs)
