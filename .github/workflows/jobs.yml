@@ -16,6 +16,8 @@ env:
   GEMPY_JOBS_GITHUB_USERNAME: ${{ github.actor }}
   GEMPY_JOBS_GITHUB_OAUTH_TOKEN: ${{ secrets.GEMPY_JOBS_GITHUB_OAUTH_TOKEN }}
 
+  PYTHONWARNINGS: "ignore"
+
 jobs:
   jobs:
     name: Jobs

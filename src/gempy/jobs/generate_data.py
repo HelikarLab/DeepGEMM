@@ -27,7 +27,7 @@ from gempy.__attr__ import __name__ as NAME
 logger = get_logger(name = NAME)
 
 DEFAULT_BRANCH  = "develop"
-COMMIT_INTERVAL = 60 * 5
+COMMIT_INTERVAL = 60
 
 def save_and_publish(repo_dir, data_dir, target_path):
     timer = threading.Timer(COMMIT_INTERVAL, save_and_publish, [repo_dir, data_dir, target_path])
