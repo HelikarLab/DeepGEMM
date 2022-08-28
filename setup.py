@@ -29,6 +29,9 @@ def parse_requirements(filename, session = None):
             self.req = name
             
     def sanitize_line(line):
+        if "-e" in line:
+            line = line.replace("-e", "")
+
         if "git+" in line:
             line = line.replace("git+", "")
 
