@@ -92,9 +92,6 @@ def optimize_model_and_save(model, output, **kwargs):
     if solution.status != optlang.interface.INFEASIBLE:
         objective_value = solution.objective_value
 
-        if osp.exists(output):
-            row = read_csv(output, type = "row")
-
         for reaction in model.reactions:
             row += reaction.bounds
 
