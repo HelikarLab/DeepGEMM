@@ -40,8 +40,10 @@ from bpyutils.util.ml     import get_data_dir
 from gempy import settings, __name__ as NAME
 
 def build_model(artifacts_path = None):
-    # dropout_rate  = settings.get("dropout_rate")
-    # batch_norm    = settings.get("batch_norm")
+    encoder_dropout_rate = settings.get("encoder_dropout_rate")
+    encoder_batch_norm   = settings.get("encoder_batch_norm")
+    decoder_dropout_rate = settings.get("decoder_dropout_rate")
+    decoder_batch_norm   = settings.get("decoder_batch_norm")
 
     # width, height = settings.get("image_width"), \
     #     settings.get("image_height")
@@ -58,7 +60,6 @@ def build_model(artifacts_path = None):
     #     unet.plot(to_file = path_plot)
 
     # return unet
-    pass
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
     batch_size    = 1 if check else settings.get("batch_size")

@@ -39,8 +39,10 @@ settings = Settings(location = PATH["CACHE"], defaults = {
     "jobs":                 DEFAULT["jobs"],
     "batch_size":           DEFAULT["batch_size"],
     "learning_rate":        DEFAULT["learning_rate"],
-    "batch_norm":           DEFAULT["batch_norm"],
-    "dropout_rate":         DEFAULT["dropout_rate"],
+    "encoder_dropout_rate": DEFAULT["encoder_dropout_rate"],
+    "encoder_batch_norm":   DEFAULT["encoder_batch_norm"],
+    "decoder_dropout_rate": DEFAULT["decoder_dropout_rate"],
+    "decoder_batch_norm":   DEFAULT["decoder_batch_norm"],
     "epochs":               DEFAULT["epochs"]
 })
 

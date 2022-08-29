@@ -17,22 +17,23 @@ def _get_bounds(model, type_):
     bounds  = []
 
     for reaction in model.reactions:
-        bound = getattr(reaction, attr)
+        bound   = getattr(reaction, attr)
         bounds += [bound, bound]
 
     return bounds
 
 def _get_obj_coeff_arr(model):
-    reactions   = model.reactions
-    n_reactions = len(reactions)
+    reactions    = model.reactions
+    n_reactions  = len(reactions)
 
-    matrix      = np.zeros((n_reactions * 2, 1))
+    n_objectives = len(model.objectives)
 
-    r_index     = reactions.index
+    matrix       = np.zeros((n_reactions * 2, n_objectives))
 
-    for reaction_id, reaction in iteritems(model.objectives):
-        matrix[r_index(reaction_id),     0] =  1
-        matrix[r_index(reaction_id) + 1, 0] = -1
+    for i, (reaction_id, reaction) in enumerate(iteritems(model.objectives)):
+        reaction_index = reactions.index(reaction_id) * 2
+        matrix[reaction_index,     i] = -1
+        matrix[reaction_index + 1, i] = 1 if reaction.reversibility else 0
 
     return matrix
 
@@ -46,7 +47,7 @@ class OptimizationProblem(PyMOOProblem):
             n_constr    = len(model.constraints),
             n_obj       = len(model.objectives),
             xl          = _get_bounds(model, "lower"),
-            xb          = _get_bounds(model, "upper")
+            xu          = _get_bounds(model, "upper")
         , *args, **kwargs)
 
         self._model = model
@@ -57,12 +58,14 @@ class OptimizationProblem(PyMOOProblem):
 
     def _evaluate(self, x, out, *args, **kwargs):
         model    = self.model
-        X        = np.transpose(x)
-
-        coeff    = _get_obj_coeff_arr(model)
+        
         S        = model.sparse_stoichiometric_matrix
 
-        out["F"] = np.dot(np.transpose(coeff), X)
+        X        = np.transpose(x)
+
+        c        = _get_obj_coeff_arr(model)
+
+        out["F"] = np.dot(np.transpose(c), X)
         out["G"] = np.dot(S, X)
 
 class Problem:
@@ -76,7 +79,7 @@ class Problem:
     def solve(self, *args, **kwargs):
         model     = self.model
 
-        algorithm = kwargs.get("algorithm", "nsga2")
+        algorithm = kwargs.pop("algorithm", "nsga2")
 
         if algorithm not in ALGORITHMS:
             raise ValueError("Algorithm %s not found." % algorithm)
@@ -86,6 +89,6 @@ class Problem:
 
         problem = OptimizationProblem(model = model)
 
-        result  = minimize(problem, algorithm_instance)
+        result  = minimize(problem, algorithm_instance, *args, **kwargs)
 
         return result

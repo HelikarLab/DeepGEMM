@@ -42,10 +42,10 @@ class Model(COBRAPyModel):
         if len(self.objectives) == 1:
             solution = self._super.optimize(*args, **kwargs)
         else:
-            algorithm = kwargs.get("algorithm", "nsga2")
+            algorithm = kwargs.pop("algorithm", "nsga2")
 
             problem   = Problem(self)
 
-            solution  = problem.solve(algorithm = algorithm)
+            solution  = problem.solve(algorithm = algorithm, *args, **kwargs)
 
         return solution

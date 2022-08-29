@@ -14,6 +14,10 @@ DEFAULT = {
     "batch_size":           256,
     "learning_rate":        1e-4,
     "batch_norm":           True,
-    "dropout_rate":         0.3,
-    "epochs":               50
+    "epochs":               50,
+
+    "encoder_dropout_rate": 0.3,
+    "encoder_batch_norm":   False,
+    "decoder_dropout_rate": 0,
+    "decoder_batch_norm":   True
 }

@@ -25,7 +25,7 @@ from gempy import settings
 logger = log.get_logger(name = NAME)
 
 CSV_HEADER_PRE  = []
-CSV_HEADER_POST = ["objective_value"]
+CSV_HEADER_POST = []
 
 MINIMUM_LOWER_BOUND = -1000
 MAXIMUM_UPPER_BOUND =  1000
@@ -97,7 +97,7 @@ def optimize_model_and_save(model, output, **kwargs):
         for reaction in model.reactions:
             row += reaction.bounds
 
-        row.append(objective_value)
+        row += solution.fluxes.values
 
         write_csv(output, row, mode = "a+")
 
@@ -135,7 +135,8 @@ def generate_flux_data(sbml_path, **kwargs):
                 reaction_bounds_columns = flatten(
                     lmap(lambda x: ("%s_lb" % x.id, "%s_ub" % x.id), reactions)
                 )
-                header = CSV_HEADER_PRE + reaction_bounds_columns + CSV_HEADER_POST
+                reaction_fluxes_columns = lmap(lambda x: "%s_flux" % x.id, reactions)
+                header = CSV_HEADER_PRE + reaction_bounds_columns + reaction_fluxes_columns + CSV_HEADER_POST
                 write_csv(output_csv, header)
 
             with parallel.no_daemon_pool(processes = jobs) as pool:
