@@ -1,9 +1,14 @@
 from bpyutils.util.array import sequencify
 
-from cobra.core.model import Model as COBRAPyModel
+import pandas as pd
+
+from cobra.core.model    import Model as COBRAPyModel
+from cobra.core.solution import Solution as COBRAPySolution
 
 from gempy.integrations.cobra.optimization import Problem
 from gempy.integrations.cobra.util import create_sparse_stoichiometric_matrix
+
+MULTI = "multi"
 
 class Model(COBRAPyModel):
     def __init__(self, *args, **kwargs):
@@ -20,6 +25,10 @@ class Model(COBRAPyModel):
             self._objectives[self.objective.name] = self.objective
 
         return self._objectives
+
+    @property
+    def n_flat_reactions(self):
+        return sum([2 if r.reversibility else 1 for r in self.reactions])
 
     @objectives.setter
     def objectives(self, value):
@@ -39,13 +48,23 @@ class Model(COBRAPyModel):
         return create_sparse_stoichiometric_matrix(self)
 
     def optimize(self, *args, **kwargs):
-        if len(self.objectives) == 1:
+        algorithm = kwargs.pop("algorithm", "nsga2")
+        verbose   = kwargs.pop("verbose", True)
+
+        if len(self.objectives) == 1 and algorithm == "single":
             solution = self._super.optimize(*args, **kwargs)
         else:
-            algorithm = kwargs.pop("algorithm", "nsga2")
-
             problem   = Problem(self)
 
-            solution  = problem.solve(algorithm = algorithm, *args, **kwargs)
+            solution  = problem.solve(algorithm = algorithm, 
+                verbose = verbose, *args, **kwargs)
+
+            cobra_solution = COBRAPySolution(
+                objective_value = 0,
+                status = MULTI,
+                fluxes = solution.X
+            )
+
+            solution  = cobra_solution
 
         return solution

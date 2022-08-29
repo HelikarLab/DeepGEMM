@@ -24,7 +24,7 @@ def _get_bounds(model, type_):
 
 def _get_obj_coeff_arr(model):
     reactions    = model.reactions
-    n_reactions  = len(reactions)
+    n_reactions  = len(model.reactions)
 
     n_objectives = len(model.objectives)
 
@@ -32,8 +32,9 @@ def _get_obj_coeff_arr(model):
 
     for i, (reaction_id, reaction) in enumerate(iteritems(model.objectives)):
         reaction_index = reactions.index(reaction_id) * 2
-        matrix[reaction_index,     i] = -1
-        matrix[reaction_index + 1, i] = 1 if reaction.reversibility else 0
+
+        matrix[reaction_index, i]     = 1
+        matrix[reaction_index + 1, i] = 0
 
     return matrix
 
@@ -59,7 +60,7 @@ class OptimizationProblem(PyMOOProblem):
     def _evaluate(self, x, out, *args, **kwargs):
         model    = self.model
         
-        S        = model.sparse_stoichiometric_matrix
+        S        = -model.sparse_stoichiometric_matrix
 
         X        = np.transpose(x)
 
