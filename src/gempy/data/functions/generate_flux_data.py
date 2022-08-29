@@ -97,7 +97,7 @@ def optimize_model_and_save(model, output, **kwargs):
         for reaction in model.reactions:
             row += reaction.bounds
 
-        row += solution.fluxes.values
+        row += list(solution.fluxes.values)
 
         write_csv(output, row, mode = "a+")
 
