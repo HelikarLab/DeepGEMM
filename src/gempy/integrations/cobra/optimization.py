@@ -33,6 +33,7 @@ def _get_obj_coeff_arr(model):
     for i, (reaction_id, reaction) in enumerate(iteritems(model.objectives)):
         reaction_index = reactions.index(reaction_id) * 2
 
+        # TODO: check here.
         matrix[reaction_index, i]     = 1
         matrix[reaction_index + 1, i] = 0
 
@@ -60,11 +61,11 @@ class OptimizationProblem(PyMOOProblem):
     def _evaluate(self, x, out, *args, **kwargs):
         model    = self.model
         
-        S        = -model.sparse_stoichiometric_matrix
+        S        = model.sparse_stoichiometric_matrix
 
         X        = np.transpose(x)
 
-        c        = _get_obj_coeff_arr(model)
+        c        = -_get_obj_coeff_arr(model)
 
         out["F"] = np.dot(np.transpose(c), X)
         out["G"] = np.dot(S, X)

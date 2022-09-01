@@ -21,6 +21,6 @@ def create_sparse_stoichiometric_matrix(model, dtype = np.float64):
 
         for metabolite, coeff in iteritems(reaction.metabolites):
             matrix[m_index(metabolite), reaction_index]     = coeff
-            matrix[m_index(metabolite), reaction_index + 1] = -coeff
+            matrix[m_index(metabolite), reaction_index + 1] = -coeff if reaction.reversibility else 0
 
     return matrix

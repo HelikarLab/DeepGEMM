@@ -62,7 +62,7 @@ class Model(COBRAPyModel):
             cobra_solution = COBRAPySolution(
                 objective_value = 0,
                 status = MULTI,
-                fluxes = solution.X
+                fluxes = pd.DataFrame(data = solution.X)
             )
 
             solution  = cobra_solution

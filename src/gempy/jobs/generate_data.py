@@ -55,9 +55,9 @@ def run(*args, **kwargs):
     check = kwargs.get("check", False)
     gen_flux_data = kwargs.get("gen_flux_data", True)
 
-    PATH_CACHE  = get_config_path(NAME)
+    PATH_CACHE = get_config_path(NAME)
 
-    dir_path    = PATH_CACHE
+    dir_path   = PATH_CACHE
 
     repo = osp.join(dir_path, "gempy")
 

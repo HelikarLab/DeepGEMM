@@ -16,7 +16,8 @@ logger = log.get_logger(name = NAME)
 
 def download_bigg_model(model_id, data_dir = None,
     gen_flux_data = False,
-    flux_data_dir = None):
+    flux_data_dir = None
+):
     data_dir = get_data_dir(NAME, data_dir = data_dir)
     target   = osp.join(data_dir, "%s.xml.gz" % model_id)
     flux_data_dir = flux_data_dir or data_dir
@@ -49,10 +50,6 @@ def fetch_bigg_models(data_dir = None, check = False, *args, **kwargs):
             flux_data_dir = flux_data_dir)
         pool.map(function_, model_ids)
 
-def fetch_biomodels(data_dir = None, check = False, *args, **kwargs):
-    pass
-
 def fetch_models(data_dir = None, check = False, *args, **kwargs):
     logger.info("Fetching models...")
     fetch_bigg_models(data_dir = data_dir, check = check, *args, **kwargs)
-    fetch_biomodels(data_dir = data_dir, check = check, *args, **kwargs)
