@@ -1,0 +1,1 @@
+from gempy.model.minimize import minimize_model

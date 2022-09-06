@@ -6,21 +6,13 @@ from pymoo.optimize import minimize
 
 from bpyutils._compat import iteritems
 
+from cobra.util.array import constraint_matrices
+
 ALGORITHMS = {
     "nsga2": {
         "class": NSGA2
     }
 }
-
-def _get_bounds(model, type_):
-    attr    = "%s_bound" % type_
-    bounds  = []
-
-    for reaction in model.reactions:
-        bound   = getattr(reaction, attr)
-        bounds += [bound, bound]
-
-    return bounds
 
 def _get_obj_coeff_arr(model):
     reactions    = model.reactions
@@ -31,11 +23,11 @@ def _get_obj_coeff_arr(model):
     matrix       = np.zeros((n_reactions * 2, n_objectives))
 
     for i, (reaction_id, reaction) in enumerate(iteritems(model.objectives)):
-        reaction_index = reactions.index(reaction_id) * 2
+        reaction_index = model.reactions.index(reaction_id)
 
         # TODO: check here.
-        matrix[reaction_index, i]     = 1
-        matrix[reaction_index + 1, i] = 0
+        matrix[reaction_index, i]     =  1
+        matrix[reaction_index + 1, i] = -1
 
     return matrix
 
@@ -43,13 +35,15 @@ class OptimizationProblem(PyMOOProblem):
     def __init__(self, *args, **kwargs):
         model = kwargs["model"]
 
+        self._constraint_matrix = constraint_matrices(model)
+
         self._super = super(OptimizationProblem, self)
         self._super.__init__(
             n_var       = len(model.variables),
             n_constr    = len(model.constraints),
             n_obj       = len(model.objectives),
-            xl          = _get_bounds(model, "lower"),
-            xu          = _get_bounds(model, "upper")
+            xl          = self._constraint_matrix.variable_bounds[:,0],
+            xu          = self._constraint_matrix.variable_bounds[:,1]
         , *args, **kwargs)
 
         self._model = model
@@ -60,16 +54,16 @@ class OptimizationProblem(PyMOOProblem):
 
     def _evaluate(self, x, out, *args, **kwargs):
         model    = self.model
-        
-        S        = model.sparse_stoichiometric_matrix
+
+        S        = self._constraint_matrix.equalities
 
         X        = np.transpose(x)
 
-        c        = -_get_obj_coeff_arr(model)
+        c        = _get_obj_coeff_arr(model)
 
-        out["F"] = np.dot(np.transpose(c), X)
+        out["F"] = np.dot(-np.transpose(c), X)
         out["G"] = np.dot(S, X)
-
+        
 class Problem:
     def __init__(self, model):
         self._model = model

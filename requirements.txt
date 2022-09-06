@@ -4,3 +4,4 @@ requests
 -e git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 cobra
 wandb
+fuzzywuzzy
