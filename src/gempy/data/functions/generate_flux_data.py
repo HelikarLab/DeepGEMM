@@ -1,26 +1,27 @@
 import os.path as osp
-import gzip
 import random
+import warnings
 
 from gempy import __name__ as NAME
+from gempy.config import DEFAULT
 
 from bpyutils.util.ml      import get_data_dir
-from bpyutils.util.system  import (
-    make_temp_file
-)
-from bpyutils.util.array   import flatten
-from bpyutils.util.types   import lmap, build_fn
+from bpyutils.util.types   import lmap
 from bpyutils.util.string  import get_random_str
+from bpyutils.util.array   import flatten
 from bpyutils.util._csv    import (
     read as read_csv,
     write as write_csv
 )
-from bpyutils              import log, parallel
+from bpyutils import log
 
 import cobra
-import optlang
+import pandas as pd
+from tqdm import tqdm
 
 from gempy import settings
+
+warnings.filterwarnings("ignore")
 
 logger = log.get_logger(name = NAME)
 
@@ -30,115 +31,113 @@ CSV_HEADER_POST = []
 MINIMUM_LOWER_BOUND = -1000
 MAXIMUM_UPPER_BOUND =  1000
 
+MAXIMUM_KNOCKOUTS   = 3
+
+def get_random_model_object_ko_sample(model, type_, n = MAXIMUM_KNOCKOUTS):
+    objekt = getattr(model, type_)
+    rand_n = random.randint(1, n)
+    sample = random.sample(objekt, rand_n)
+    return sample
+
 def knock_out_random_genes(model, output):
-    logger.info("Using strategy: knock_out_random_genes...")
+    ko_genes = get_random_model_object_ko_sample(model, "genes", n = MAXIMUM_KNOCKOUTS)
 
-    while True:
-        genes     = model.genes
-        ngenes    = len(genes)
-
-        nknockout = random.randint(1, ngenes)
-
-        with model:
-            knockout_genes = random.sample(genes, nknockout)
-            for gene in knockout_genes:
-                gene.knock_out()
-
-            logger.info("Knocked Out %s genes." % nknockout)
-
-            optimize_model_and_save(model, output)
+    with model:
+        for gene in ko_genes:
+            gene.knock_out()
+        return optimize_model_and_save(model, output)
 
 def knock_out_random_reactions(model, output):
-    logger.info("Using strategy: knock_out_random_reactions...")
+    ko_reactions = get_random_model_object_ko_sample(model, "reactions", n = MAXIMUM_KNOCKOUTS)
+    
+    with model:
+        for reaction in ko_reactions:
+            reaction.knock_out()
+        return optimize_model_and_save(model, output)
 
-    while True:
-        reactions  = model.reactions
-        nreactions = len(reactions)
+def change_random_reaction_bounds(model, output):
+    n = random.randint(1, len(model.reactions))
+    random_reactions = get_random_model_object_ko_sample(model, "reactions", n = n)
 
-        nknockout  = random.randint(1, nreactions)
-
-        with model:
-            knockout_reactions = random.sample(reactions, nknockout)
-            for reaction in knockout_reactions:
-                reaction.knock_out()
-
-            logger.info("Knocked Out %s reactions." % nknockout)
-
-            optimize_model_and_save(model, output)
-
-def randomize_reaction_bounds(model, output):
-    logger.info("Using strategy: randomize_reaction_bounds...")
-
-    while True:
-        reactions  = model.reactions
-        nreactions = len(reactions)
-
-        nrandom    = random.randint(1, nreactions)
-
-        with model:
-            for _ in range(nrandom):
-                reaction = random.choice(reactions)
-
+    with model:
+        for reaction in random_reactions:
+            if reaction.reversibility:
                 reaction.lower_bound = random.uniform(MINIMUM_LOWER_BOUND, 0)
                 reaction.upper_bound = random.uniform(0, MAXIMUM_UPPER_BOUND)
-
-            logger.info("Randomized %s reaction bounds." % nrandom)
-
-            optimize_model_and_save(model, output)
+            else:
+                reaction.upper_bound = random.uniform(reaction.lower_bound, MAXIMUM_UPPER_BOUND)
+        return optimize_model_and_save(model, output)
 
 def optimize_model_and_save(model, output, **kwargs):
     solution = model.optimize()
+    success  = False
 
-    if solution.status != optlang.interface.INFEASIBLE:
-        objective_value = solution.objective_value
+    if solution.status == 'optimal':
+        fluxes = list(solution.fluxes)
 
-        row = []
-
-        for reaction in model.reactions:
-            row += reaction.bounds
-
-        row += list(solution.fluxes.values)
+        row  = flatten(lmap(lambda x: x.bounds, model.reactions))
+        row += fluxes
 
         write_csv(output, row, mode = "a+")
 
+        success = True
+
+    return success
+
 def mutate_model_and_save(strategy, model, output):
-    strategy(model, output)
+    return strategy(model, output)
 
 STRATEGIES = [
     knock_out_random_genes,
     knock_out_random_reactions,
-    randomize_reaction_bounds
+    change_random_reaction_bounds
 ]
 
+def _mutate_step(model, output):
+    strategy = random.choice(STRATEGIES)
+    return mutate_model_and_save(strategy, model, output)
+
 def generate_flux_data(sbml_path, **kwargs):
-    jobs  = kwargs.get("jobs", settings.get("jobs"))
+    jobs = kwargs.get("jobs", settings.get("jobs"))
     data_dir = get_data_dir(NAME, kwargs.get("data_dir"))
+    n_data_points = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
 
     model = None
 
     logger.info("Generating flux data for model at path: %s" % sbml_path)
 
-    with gzip.open(sbml_path, "rb") as read_f:
-        with make_temp_file() as tmp_file:
-            with open(tmp_file, "wb") as write_f:
-                content = read_f.read()
-                write_f.write(content)
+    logger.info("Loading SBML model from path: %s" % sbml_path)
+    model = cobra.io.read_sbml_model(sbml_path)
+    logger.success("Loaded SBML model from path: %s" % sbml_path)
 
-            model       = cobra.io.read_sbml_model(tmp_file)
+    name  = model.id or model.name or get_random_str()
+    output_csv = osp.join(data_dir, "%s.csv" % name)
 
-            name        = model.id or model.name or get_random_str()
-            output_csv  = osp.join(data_dir, "%s.csv" % name)
+    reactions = model.reactions
 
-            reactions   = model.reactions
+    if not osp.exists(output_csv):
+        logger.info("Creating output CSV file at path: %s" % output_csv)
 
-            if not osp.exists(output_csv):
-                reaction_bounds_columns = flatten(
-                    lmap(lambda x: ("%s_lb" % x.id, "%s_ub" % x.id), reactions)
-                )
-                reaction_fluxes_columns = lmap(lambda x: "%s_flux" % x.id, reactions)
-                header = CSV_HEADER_PRE + reaction_bounds_columns + reaction_fluxes_columns + CSV_HEADER_POST
-                write_csv(output_csv, header)
+        reaction_columns = flatten(
+            lmap(lambda x: [x.id + "_lb", x.id + "_ub"], reactions)
+        )
 
-            with parallel.no_daemon_pool(processes = jobs) as pool:
-                function = build_fn(mutate_model_and_save, model = model, output = output_csv)
-                list(pool.map(function, STRATEGIES))
+        reaction_flux_columns = lmap(lambda x: "%s_flux" % x.id, reactions)
+        header = CSV_HEADER_PRE + reaction_columns + reaction_flux_columns + CSV_HEADER_POST
+        write_csv(output_csv, header)
+
+        logger.success("Created output CSV file at path: %s" % output_csv)
+    else:
+        logger.warning("Output CSV file already exists at path: %s" % output_csv)
+
+    with tqdm(total = n_data_points, desc = "Generating Flux Data") as pbar:
+        i = 0
+        while i < n_data_points:
+            success = _mutate_step(model, output_csv)
+
+            if success:
+                i += 1
+                pbar.update(1)
+
+    logger.success("Generated flux data for model at path: %s" % sbml_path)
+    logger.success("Currently, %s flux data points are available." % len(pd.read_csv(output_csv)))

@@ -23,8 +23,6 @@ from gempy.config      import PATH
 from gempy.const       import DEFAULT
 from gempy.__main__    import main
 
-import deeply
-
 from bpyutils.cache       import Cache
 from bpyutils.config      import Settings
 from bpyutils.util.jobs   import run_all as run_all_jobs, run_job
@@ -51,6 +49,7 @@ def get_version_str():
     return version
 
 try:
+    import deeply
     dops = deeply.ops.service("wandb")
     dops.init("gempy")
 except:

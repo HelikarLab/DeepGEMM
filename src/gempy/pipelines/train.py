@@ -26,14 +26,14 @@
 
 import os.path as osp
 
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.metrics    import binary_accuracy
+# from tensorflow.keras.optimizers import Adam
+# from tensorflow.keras.metrics    import binary_accuracy
 
-from deeply.model.gan     import GAN
+# from deeply.model.gan     import GAN
 
-from deeply.datasets.util import SPLIT_TYPES
-from deeply.generators    import ImageMaskGenerator
-from deeply.losses        import dice_loss
+# from deeply.datasets.util import SPLIT_TYPES
+# from deeply.generators    import ImageMaskGenerator
+# from deeply.losses        import dice_loss
 
 from bpyutils.util.ml     import get_data_dir
 
@@ -60,6 +60,10 @@ def build_model(artifacts_path = None):
     #     unet.plot(to_file = path_plot)
 
     # return unet
+
+# STRATEGIES = [
+#     { ""}
+# ]
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
     batch_size    = 1 if check else settings.get("batch_size")

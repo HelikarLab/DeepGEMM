@@ -1,11 +1,10 @@
-bioservices
-tqdm
-requests
-bpyutils
-git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
-cobra
-wandb
-fuzzywuzzy
+sphinx
+recommonmark
+sphinx-autobuild
+ipykernel
+nbsphinx
+pylint
+autopep8
 pytest
 pytest-cov
 pytest-xdist
@@ -15,11 +14,14 @@ tox
 coveralls
 pluggy<1,>=0.12.0
 docstr-coverage
-sphinx
-recommonmark
-sphinx-autobuild
-ipykernel
-nbsphinx
+bioservices
+tqdm
+requests
+bpyutils
+# git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
+cobra
+wandb
+fuzzywuzzy
 pipenv
 jedi<0.18
 ipython
@@ -32,5 +34,3 @@ twine
 jupyter
 
 Flask
-pylint
-autopep8

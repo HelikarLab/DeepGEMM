@@ -2,7 +2,7 @@ bioservices
 tqdm
 requests
 bpyutils
-git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
+# git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 cobra
 wandb
 fuzzywuzzy

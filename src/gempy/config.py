@@ -15,5 +15,6 @@ PATH["CACHE"] = get_config_path(NAME)
 
 DEFAULT = {
     "diamond_db": "pdbaa",
-    "bigg_model_id": "e_coli_core"
+    "bigg_model_id": "e_coli_core",
+    "n_flux_data_points": 1000
 }

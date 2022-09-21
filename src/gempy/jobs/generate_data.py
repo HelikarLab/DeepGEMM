@@ -53,7 +53,7 @@ def run(*args, **kwargs):
 
     jobs  = kwargs.get("jobs",  CPU_COUNT)
     check = kwargs.get("check", False)
-    gen_flux_data = kwargs.get("gen_flux_data", True)
+    gen_flux_data = kwargs.get("gen_flux_data", False)
 
     PATH_CACHE = get_config_path(NAME)
 

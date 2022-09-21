@@ -35,8 +35,8 @@ def get_data(data_dir = None, check = False, *args, **kwargs):
     logger.info("Fetching models...")
     fetch_models(data_dir = data_dir, check = check, *args, **kwargs)
 
-    logger.info("Generating online data...")
-    generate_data(data_dir = data_dir, check = check, *args, **kwargs)
+    # logger.info("Generating online data...")
+    # generate_data(data_dir = data_dir, check = check, *args, **kwargs)
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir = data_dir)
