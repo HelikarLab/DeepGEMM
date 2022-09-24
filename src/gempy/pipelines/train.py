@@ -1,6 +1,5 @@
 # from gempy.__attr__ import __name__ as NAME
 # from gempy.data import get_data_dir
-# from gempy import settings, dops
 
 # def build_model(artifacts_path = None):
 #     dropout_rate  = settings.get("dropout_rate")
@@ -24,7 +23,6 @@
 
 #     # do something ...
 
-import os.path as osp
 
 # from tensorflow.keras.optimizers import Adam
 # from tensorflow.keras.metrics    import binary_accuracy
@@ -35,18 +33,34 @@ import os.path as osp
 # from deeply.generators    import ImageMaskGenerator
 # from deeply.losses        import dice_loss
 
+import os.path as osp
+import warnings
+
+from bpyutils.util.system import makepath
 from bpyutils.util.ml import get_data_dir
-from bpyutils import log
+from bpyutils.log import get_logger
+
+import deeply
 
 from gempy import settings, __name__ as NAME
+from gempy import settings, dops
 
-logger = log.get_logger(name = NAME)
+warnings.filterwarnings("ignore")
+
+logger = get_logger(NAME)
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
     encoder_batch_norm   = settings.get("encoder_batch_norm")
     decoder_dropout_rate = settings.get("decoder_dropout_rate")
     decoder_batch_norm   = settings.get("decoder_batch_norm")
+
+    gan = deeply.hub("gan", x = 100,
+        encoder_dropout_rate = encoder_dropout_rate,
+        encoder_batch_norm   = encoder_batch_norm,
+        decoder_dropout_rate = decoder_dropout_rate,
+        decoder_batch_norm = decoder_batch_norm
+    )
 
     # width, height = settings.get("image_width"), \
     #     settings.get("image_height")
@@ -58,11 +72,12 @@ def build_model(artifacts_path = None):
 
     # # unet.
     
-    # if artifacts_path:
-    #     path_plot = osp.join(artifacts_path, "model.png")
-    #     unet.plot(to_file = path_plot)
+    if artifacts_path:
+        path_plot = osp.join(artifacts_path, "model.png")
+        makepath(path_plot)
+        gan.plot(to_file = path_plot)
 
-    # return unet
+    return gan
 
 # STRATEGIES = [
 #     { ""}
@@ -71,11 +86,14 @@ def build_model(artifacts_path = None):
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
     logger.info("Initiating Training...")
 
-    batch_size    = 1 if check else settings.get("batch_size")
-    learning_rate = settings.get("learning_rate")
-    epochs        = 1 if check else settings.get("epochs")
+    logger.info("Storing artifacts at path: %s" % artifacts_path)
+
+
+    # batch_size    = 1 if check else settings.get("batch_size")
+    # learning_rate = settings.get("learning_rate")
+    # epochs        = 1 if check else settings.get("epochs")
     
-    model = build_model()
+    model = build_model(artifacts_path = artifacts_path)
     # model.compile(optimizer = Adam(learning_rate = learning_rate),
     #     loss = dice_loss, metrics = [binary_accuracy])
 
