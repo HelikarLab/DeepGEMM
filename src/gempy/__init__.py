@@ -48,9 +48,6 @@ def get_version_str():
     version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
     return version
 
-try:
-    import deeply
-    dops = deeply.ops.service("wandb")
-    dops.init("gempy")
-except:
-    logger.warning("wandb not available")
+import deeply
+dops = deeply.ops.service("wandb")
+dops.init("gempy")

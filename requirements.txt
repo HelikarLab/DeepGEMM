@@ -5,4 +5,5 @@ bpyutils
 # git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 cobra
 wandb
-fuzzywuzzy
+pydot
+pygraphviz
