@@ -35,9 +35,12 @@ import os.path as osp
 # from deeply.generators    import ImageMaskGenerator
 # from deeply.losses        import dice_loss
 
-from bpyutils.util.ml     import get_data_dir
+from bpyutils.util.ml import get_data_dir
+from bpyutils import log
 
 from gempy import settings, __name__ as NAME
+
+logger = log.get_logger(name = NAME)
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
@@ -66,6 +69,8 @@ def build_model(artifacts_path = None):
 # ]
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
+    logger.info("Initiating Training...")
+
     batch_size    = 1 if check else settings.get("batch_size")
     learning_rate = settings.get("learning_rate")
     epochs        = 1 if check else settings.get("epochs")
