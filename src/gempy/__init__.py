@@ -48,6 +48,7 @@ def get_version_str():
     version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
     return version
 
-import deeply
-dops = deeply.ops.service("wandb")
-dops.init("gempy")
+if os.environ.get("GEMPY_WANDB"):
+    import deeply
+    dops = deeply.ops.service("wandb")
+    dops.init("gempy")
