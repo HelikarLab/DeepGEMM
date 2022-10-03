@@ -7,6 +7,7 @@ from gempy.data.functions.generate_flux_data import generate_flux_data
 from bpyutils.util.ml      import get_data_dir
 from bpyutils.util.types   import build_fn
 from bpyutils.util.types   import lmap
+from bpyutils.util.string  import strip
 from bpyutils.const        import CPU_COUNT
 from bpyutils              import parallel, log
 
@@ -44,7 +45,10 @@ def fetch_bigg_models(data_dir = None, check = False, *args, **kwargs):
     model_ids = lmap(lambda x: x["bigg_id"], bigg.models)
 
     if check:
-        model_ids = (DEFAULT["bigg_model_id"],)
+        model_ids_arg = kwargs.get("model_id", DEFAULT["bigg_model_id"])
+        model_ids_arg = lmap(strip, model_ids_arg.split(","))
+
+        model_ids = model_ids_arg
     
     with parallel.no_daemon_pool(processes = jobs) as pool:
         function_ = build_fn(download_bigg_model, data_dir = data_dir,

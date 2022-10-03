@@ -88,7 +88,6 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
 
     logger.info("Storing artifacts at path: %s" % artifacts_path)
 
-
     # batch_size    = 1 if check else settings.get("batch_size")
     # learning_rate = settings.get("learning_rate")
     # epochs        = 1 if check else settings.get("epochs")
