@@ -1,9 +1,9 @@
-bioservices
+bioservices==1.10.2
 tqdm
 requests
 bpyutils
 # git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 cobra
 wandb
-pydot
-pygraphviz
+# pydot
+# pygraphviz

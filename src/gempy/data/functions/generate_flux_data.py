@@ -130,7 +130,7 @@ def generate_flux_data(sbml_path, **kwargs):
     else:
         logger.warning("Output CSV file already exists at path: %s" % output_csv)
 
-    with tqdm(total = n_data_points, desc = "Generating Flux Data") as pbar:
+    with tqdm(total = n_data_points, desc = "Generating Flux Data (%s)" % model.id) as pbar:
         i = 0
         while i < n_data_points:
             success = _mutate_step(model, output_csv)
