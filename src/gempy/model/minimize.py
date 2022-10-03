@@ -324,21 +324,9 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
         logger.info("Finding optimal reactions...")
         pfba_opt_rxns = fva_irr_rxns
 
-        def _is_not_member(a, b):
-            return list(np.invert(np.in1d(a, b)))
-
-        def _mask_list(l, mask):
-            n = []
-            
-            for i, e in enumerate(l):
-                if mask[i]:
-                    n.append(e)
-            
-            return n
-
-        pfba_opt_rxns = list(set(pfba_opt_rxns) - set(mle_rxns))
-        pfba_opt_rxns = list(set(pfba_opt_rxns) - set(pfba_essential_rxns))
-        pfba_opt_rxns = lfilter(lambda x: not x.endswith("_reverse"), pfba_opt_rxns)
+        pfba_opt_rxns = np.setdiff1d(pfba_opt_rxns, mle_rxns)
+        pfba_opt_rxns = np.setdiff1d(pfba_opt_rxns, pfba_essential_rxns)
+        pfba_opt_rxns = lfilter(lambda x: not x.endswith("_reverse"), list(pfba_opt_rxns))
         
         logger.info("Found %s pfba opt reactions." % len(pfba_opt_rxns))
         logger.info("pfba opt reactions are: %s" % pfba_opt_rxns)
@@ -397,12 +385,15 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
 
     min_react_idx  = np.where(o_rxn_sum == min_react)[0][0]
     min_react_rxns = o_rxn[min_react_idx]
+
+    min_rxns = []
     
     for i, reaction in enumerate(minimized.reactions):
         if not min_react_rxns[i]:
+            min_rxns.append(reaction.id)
             reaction.knock_out()
 
-    return minimized
+    return min_rxns, minimized
 
 MINIMIZATION_ALGORITHMS = {
     "minreact": {
