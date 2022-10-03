@@ -182,8 +182,6 @@ def get_fva_mapped_rxns(m, fn, *args, **kwargs):
     logger.info("Using %s jobs for FVA." % kwargs["processes"])
     
     fva_solution = flux_variability_analysis(m, *args, **kwargs)
-
-    print(fva_solution)
     
     rxns = []
     
@@ -355,15 +353,16 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
     for reaction in remove_reactions:
         minimized.reactions.get_by_id(reaction).knock_out()
 
-    rxns = []
+    o_rxn = []
+    o_rxn_sum = []
 
-    for opt_rxn_id in pfba_opt_rxns:
+    for o_idx, opt_rxn_id in enumerate(pfba_opt_rxns):
         with minimized as min_copy:
             reaction = min_copy.reactions.get_by_id(opt_rxn_id)
             reaction.knock_out()
             
 #             solution = model_optimize(min_copy, norm = 'l2')
-            solution = min_copy.optimize()
+            solution = min_copy.optimize(objective_sense = 'maximize')
             fluxes   = solution.fluxes
             objective_value = solution.objective_value
         
@@ -375,6 +374,8 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
             )
 
             if objective_value > 0 and len(non_zero_flux_maintain_map) == len(maintain_map):
+                abs_fluxes = fluxes.abs() > tolerance
+
                 abs_gt_tol_rxns = list(fluxes \
                     .where(lambda x: abs(x) > tolerance)
                     .index)
@@ -385,11 +386,22 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
                         reaction.lower_bound = 0
                         reaction.upper_bound = 0
                     
-                sol = min_copy.optimize()
+                sol = min_copy.optimize(objective_sense = "maximize")
                 if sol.status == "optimal" and \
                     round(sol.objective_value, 4) >= round(objective_value_cutoff, 4):
-                    print("SOMETHING")
-                    
+                    o_rxn.append(abs_fluxes)
+                    o_rxn_sum.append(sum(abs_fluxes))
+
+    min_react = np.amin(o_rxn_sum)
+    logger.info("MinReact: %s" % min_react)
+
+    min_react_idx  = np.where(o_rxn_sum == min_react)[0][0]
+    min_react_rxns = o_rxn[min_react_idx]
+    
+    for i, reaction in enumerate(minimized.reactions):
+        if not min_react_rxns[i]:
+            reaction.knock_out()
+
     return minimized
 
 MINIMIZATION_ALGORITHMS = {
