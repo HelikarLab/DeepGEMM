@@ -41,7 +41,9 @@ settings = Settings(location = PATH["CACHE"], defaults = {
     "encoder_batch_norm":   DEFAULT["encoder_batch_norm"],
     "decoder_dropout_rate": DEFAULT["decoder_dropout_rate"],
     "decoder_batch_norm":   DEFAULT["decoder_batch_norm"],
-    "epochs":               DEFAULT["epochs"]
+    "epochs":               DEFAULT["epochs"],
+
+    "test_size":            DEFAULT["test_size"],
 })
 
 def get_version_str():

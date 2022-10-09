@@ -105,10 +105,10 @@ def _mutate_step(model, output, exclude_rxns = None):
     return mutate_model_and_save(strategy, model, output, exclude_rxns = exclude_rxns)
 
 def generate_flux_data(sbml_path, **kwargs):
-    jobs           = kwargs.get("jobs", settings.get("jobs"))
-    data_dir       = get_data_dir(NAME, kwargs.get("data_dir"))
-    n_data_points  = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
-    min_model      = kwargs.get("minimize_model", DEFAULT["minimize_model"])
+    jobs = kwargs.get("jobs", settings.get("jobs"))
+    data_dir = get_data_dir(NAME, kwargs.get("data_dir"))
+    n_data_points = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
+    min_model = kwargs.get("minimize_model", DEFAULT["minimize_model"])
 
     model = None
 

@@ -21,5 +21,7 @@ DEFAULT = {
     "decoder_dropout_rate": 0,
     "decoder_batch_norm":   True,
 
-    "min_react_reaction_retention_list": ("ATPM",)
+    "min_react_reaction_retention_list": ("ATPM",),
+
+    "test_size":            0.2
 }

@@ -19,10 +19,14 @@ tqdm
 requests
 bpyutils
 # git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
-cobra
+git+https://github.com/achillesrasquinha/cobrapy.git@custom#egg=cobra
 wandb
 # pydot
 # pygraphviz
+dask
+dask-ml
+bokeh
+scikit-learn
 pipenv
 jedi<0.18
 ipython

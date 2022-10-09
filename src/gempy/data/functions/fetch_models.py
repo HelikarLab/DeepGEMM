@@ -38,7 +38,7 @@ def download_bigg_model(model_id, data_dir = None,
 def fetch_bigg_models(data_dir = None, check = False, *args, **kwargs):
     jobs = kwargs.get("jobs", CPU_COUNT)
     flux_data_dir = kwargs.get("flux_data_dir", data_dir)
-    gen_flux_data = kwargs.get("gen_flux_data", False)
+    gen_flux_data = kwargs.get("gen_flux_data", False),
     n_data_points = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
 
     bigg = BiGG()
