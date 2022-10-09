@@ -1,9 +1,9 @@
 <div align="center">
   <img src=".github/assets/logo.png" height="128">
   <h1>
-      dgemm
+    Deep GEMM
   </h1>
-  <h4>Genome-Scale Metabolic Modelling</h4>
+  <h4>Genome-Scale Metabolic Modelling meets Deep Learning</h4>
 </div>
 
 <p align="center">
