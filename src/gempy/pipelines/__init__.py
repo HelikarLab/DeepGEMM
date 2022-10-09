@@ -1,1 +1,1 @@
-from gempy.pipelines.train import train
+from dgemm.pipelines.train import train

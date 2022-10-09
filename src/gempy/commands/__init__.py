@@ -3,17 +3,17 @@ from __future__ import absolute_import
 
 # imports - standard imports
 
-from gempy.commands.util 	    import cli_format
+from dgemm.commands.util 	    import cli_format
 from bpyutils.util._dict        import merge_dict
 from bpyutils.util.system   	import (touch)
 from bpyutils.util.error        import pretty_print_error
 from bpyutils.config			import environment
 from bpyutils.exception         import DependencyNotFoundError
 from bpyutils import log, parallel
-from gempy import cli
+from dgemm import cli
 from bpyutils._compat		    import iteritems
-from gempy.__attr__      	    import __name__
-from gempy.commands.helper      import (
+from dgemm.__attr__      	    import __name__
+from dgemm.commands.helper      import (
     download_refseq,
     process_faa_file
 )
@@ -46,7 +46,7 @@ def command(**ARGUMENTS):
 
             cli.echo(cli_format("""\
 An error occured while performing the above command. This could be an issue with
-"gempy". Kindly post an issue at https://github.com/achillesrasquinha/gempy/issues""", cli.RED))
+"dgemm". Kindly post an issue at https://github.com/achillesrasquinha/dgemm/issues""", cli.RED))
         else:
             raise e
 

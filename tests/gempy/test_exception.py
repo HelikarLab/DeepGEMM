@@ -1,13 +1,13 @@
 
 
 # imports - module imports
-from gempy.exception import (
-    GempyError
+from dgemm.exception import (
+    DGEMMError
 )
 
 # imports - test imports
 import pytest
 
-def test_gempy_error():
-    with pytest.raises(GempyError):
-        raise GempyError
+def test_dgemm_error():
+    with pytest.raises(DGEMMError):
+        raise DGEMMError

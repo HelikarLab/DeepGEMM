@@ -1,5 +1,5 @@
 # imports - standard imports
-from gempy.cli.parser import get_args
+from dgemm.cli.parser import get_args
 
 def test_args():
     def _get_arg(args, arg):

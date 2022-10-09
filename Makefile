@@ -7,9 +7,9 @@ BASEDIR					= $(shell pwd)
 
 ENVIRONMENT			   ?= development
 
-PROJECT					= gempy
+PROJECT					= dgemm
 
-PROJDIR					= ${BASEDIR}/src/gempy
+PROJDIR					= ${BASEDIR}/src/dgemm
 TESTDIR					= ${BASEDIR}/tests
 DOCSDIR					= ${BASEDIR}/docs
 

@@ -14,14 +14,14 @@ NOW     = dt.datetime.now()
 
 sys.path.insert(0, BASEDIR)
 
-import gempy
+import dgemm
 
-project   = gempy.__name__
-author    = gempy.__author__
-copyright = "%s %s" % (NOW.year, gempy.__author__)
+project   = dgemm.__name__
+author    = dgemm.__author__
+copyright = "%s %s" % (NOW.year, dgemm.__author__)
 
-version   = gempy.__version__
-release   = gempy.__version__
+version   = dgemm.__version__
+release   = dgemm.__version__
 
 source_suffix       = [".rst"]
 

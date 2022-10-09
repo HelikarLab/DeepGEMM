@@ -4,7 +4,7 @@ import argparse
 import multiprocessing as mp
 
 # imports - module imports
-from gempy.__attr__     import (
+from dgemm.__attr__     import (
     __name__,
     __version__,
     __description__,

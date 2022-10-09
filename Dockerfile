@@ -1,11 +1,11 @@
-FROM ghcr.io/achillesrasquinha/gempy:base
+FROM ghcr.io/achillesrasquinha/dgemm:base
 
 ARG DEVELOPMENT=false
 
-COPY . $GEMPY_PATH
+COPY . $DGEMM_PATH
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
-WORKDIR $GEMPY_PATH
+WORKDIR $DGEMM_PATH
 
 SHELL ["/bin/bash", "-c"]
 
@@ -19,4 +19,4 @@ RUN if [[ "${DEVELOPMENT}" ]]; then \
     
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["gempy"]
+CMD ["dgemm"]

@@ -5,8 +5,8 @@ import pandas as pd
 from cobra.core.model    import Model as COBRAPyModel
 from cobra.core.solution import Solution as COBRAPySolution
 
-from gempy.integrations.cobra.optimization import Problem
-from gempy.integrations.cobra.util import create_sparse_stoichiometric_matrix
+from dgemm.integrations.cobra.optimization import Problem
+from dgemm.integrations.cobra.util import create_sparse_stoichiometric_matrix
 
 MULTI = "multi"
 

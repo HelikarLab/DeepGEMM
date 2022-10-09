@@ -1,4 +1,4 @@
-gempy
+dgemm
 ===
 
 Release v\ |version|. (:ref:`Installation <install:>`)

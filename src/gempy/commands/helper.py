@@ -4,8 +4,8 @@ from __future__ import absolute_import
 # imports - module imports
 from bpyutils import log
 
-from gempy.api.refseq import RefSeq
-from gempy.api.blast  import BLAST
+from dgemm.api.refseq import RefSeq
+from dgemm.api.blast  import BLAST
 
 logger  = log.get_logger()
 

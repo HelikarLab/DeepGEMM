@@ -1,4 +1,4 @@
-class GempyError(Exception):
+class DGEMMError(Exception):
     pass
 
 class DependencyNotFoundError(ImportError):

@@ -1,26 +1,26 @@
 <div align="center">
   <img src=".github/assets/logo.png" height="128">
   <h1>
-      gempy
+      dgemm
   </h1>
   <h4>Genome-Scale Metabolic Modelling</h4>
 </div>
 
 <p align="center">
-    <a href='https://github.com/achillesrasquinha/gempy//actions?query=workflow:"Continuous Integration"'>
-      <img src="https://img.shields.io/github/workflow/status/achillesrasquinha/gempy/Continuous Integration?style=flat-square">
+    <a href='https://github.com/achillesrasquinha/dgemm//actions?query=workflow:"Continuous Integration"'>
+      <img src="https://img.shields.io/github/workflow/status/achillesrasquinha/dgemm/Continuous Integration?style=flat-square">
     </a>
-    <a href="https://coveralls.io/github/achillesrasquinha/gempy">
-      <img src="https://img.shields.io/coveralls/github/achillesrasquinha/gempy.svg?style=flat-square">
+    <a href="https://coveralls.io/github/achillesrasquinha/dgemm">
+      <img src="https://img.shields.io/coveralls/github/achillesrasquinha/dgemm.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/gempy/">
-      <img src="https://img.shields.io/pypi/v/gempy.svg?style=flat-square">
+    <a href="https://pypi.org/project/dgemm/">
+      <img src="https://img.shields.io/pypi/v/dgemm.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/gempy/">
-      <img src="https://img.shields.io/pypi/l/gempy.svg?style=flat-square">
+    <a href="https://pypi.org/project/dgemm/">
+      <img src="https://img.shields.io/pypi/l/dgemm.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/gempy/">
-      <img src="https://img.shields.io/pypi/pyversions/gempy.svg?style=flat-square">
+    <a href="https://pypi.org/project/dgemm/">
+      <img src="https://img.shields.io/pypi/pyversions/dgemm.svg?style=flat-square">
     </a>
     <a href="https://git.io/boilpy">
       <img src="https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square">
@@ -39,7 +39,7 @@
 ### Quick Start
 
 ```shell
-$ pip install gempy
+$ pip install dgemm
 ```
 
 Check out [installation](docs/source/install.rst) for more details.
@@ -49,15 +49,15 @@ Check out [installation](docs/source/install.rst) for more details.
 #### Application Interface
 
 ```python
->>> import gempy
+>>> import dgemm
 ```
 
 
 #### Command-Line Interface
 
 ```console
-$ gempy
-Usage: gempy [OPTIONS] COMMAND [ARGS]...
+$ dgemm
+Usage: dgemm [OPTIONS] COMMAND [ARGS]...
 
   Genome-Scale Metabolic Modelling
 
@@ -73,13 +73,13 @@ Commands:
 
 ### Docker
 
-Using `gempy's` Docker Image can be done as follows:
+Using `dgemm's` Docker Image can be done as follows:
 
 ```
 $ docker run \
     --rm \
     -it \
-    achillesrasquinha/gempy \
+    achillesrasquinha/dgemm \
       --verbose
 ```
 

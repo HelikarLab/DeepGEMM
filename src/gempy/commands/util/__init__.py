@@ -2,8 +2,8 @@ from bpyutils.util.array   import sequencify
 from bpyutils.util.imports import import_handler
 
 # imports - module imports
-from gempy.cli.parser import get_args
-from gempy import cli
+from dgemm.cli.parser import get_args
+from dgemm import cli
 
 def group_commands(group, commands):
     """

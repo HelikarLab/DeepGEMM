@@ -1,7 +1,7 @@
 import os.path as osp
 
-from gempy.config import DEFAULT
-from gempy import __name__ as NAME
+from dgemm.config import DEFAULT
+from dgemm import __name__ as NAME
 
 from bpyutils.util.ml      import get_data_dir
 from bpyutils.util.system  import (
@@ -9,11 +9,11 @@ from bpyutils.util.system  import (
 )
 from bpyutils import parallel, log
 
-from gempy.data.functions import (
+from dgemm.data.functions import (
     fetch_models,
     generate_flux_data
 )
-from gempy import settings
+from dgemm import settings
 
 logger = log.get_logger()
 

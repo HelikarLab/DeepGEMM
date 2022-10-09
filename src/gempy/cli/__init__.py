@@ -1,6 +1,6 @@
 # imports - module imports
 from bpyutils.cli.util     import *
-from gempy.cli.parser import get_args
+from dgemm.cli.parser import get_args
 from bpyutils.util._dict   import merge_dict
 from bpyutils.util.types   import get_function_arguments
 

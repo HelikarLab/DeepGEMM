@@ -1,2 +1,2 @@
-from gempy.data.functions.fetch_models import fetch_models
-from gempy.data.functions.generate_flux_data import generate_flux_data
+from dgemm.data.functions.fetch_models import fetch_models
+from dgemm.data.functions.generate_flux_data import generate_flux_data

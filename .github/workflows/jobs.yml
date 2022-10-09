@@ -13,8 +13,8 @@ env:
   VERBOSE: true
   TERM: xterm
 
-  GEMPY_JOBS_GITHUB_USERNAME: ${{ github.actor }}
-  GEMPY_JOBS_GITHUB_OAUTH_TOKEN: ${{ secrets.GEMPY_JOBS_GITHUB_OAUTH_TOKEN }}
+  DGEMM_JOBS_GITHUB_USERNAME: ${{ github.actor }}
+  DGEMM_JOBS_GITHUB_OAUTH_TOKEN: ${{ secrets.DGEMM_JOBS_GITHUB_OAUTH_TOKEN }}
 
   PYTHONWARNINGS: "ignore"
 
@@ -41,4 +41,4 @@ jobs:
           python setup.py develop
       - name: Run Jobs
         run: |
-          bpyutils --run-jobs gempy.jobs --param "check=True"
+          bpyutils --run-jobs dgemm.jobs --param "check=True"

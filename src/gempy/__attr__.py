@@ -60,13 +60,13 @@ path                        = dict()
 path["base"]                = pardir(__file__)
 path["version"]             = osp.join(path["base"], "VERSION")
 
-__name__                    = "gempy"
-__command__                 = "gempy"
+__name__                    = "dgemm"
+__command__                 = "dgemm"
 __version__                 = read(osp.join(pardir(__file__), "VERSION"))
 __build__                   = get_revision(pardir(__file__, 2), short = True, raise_err = False)
 __author__                  = "Achilles Rasquinha"
 __email__                   = "achillesrasquinha@gmail.com"
 __description__             = "Genome-Scale Metabolic Modelling"
 __keywords__                = ['genome-scale', 'metabolic', 'modelling']
-__url__                     = "https://github.com/achillesrasquinha/gempy"
+__url__                     = "https://github.com/achillesrasquinha/dgemm"
 __license__                 = "MIT License"

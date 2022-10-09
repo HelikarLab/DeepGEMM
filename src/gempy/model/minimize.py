@@ -44,12 +44,12 @@ from cobra.util.solver import (
     linear_reaction_coefficients
 )
 
-from gempy.model.util import (
+from dgemm.model.util import (
     find_reaction,
     find_mle_reactions
 )
-from gempy.const import DEFAULT
-from gempy import __name__ as NAME
+from dgemm.const import DEFAULT
+from dgemm import __name__ as NAME
 
 logger = get_logger(NAME)
 

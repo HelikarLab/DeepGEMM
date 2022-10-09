@@ -1,1 +1,1 @@
-from gempy.integrations.cobra.model import Model
+from dgemm.integrations.cobra.model import Model

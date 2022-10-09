@@ -1,1 +1,1 @@
-from gempy.model.minimize import minimize_model
+from dgemm.model.minimize import minimize_model

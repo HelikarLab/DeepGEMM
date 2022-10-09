@@ -13,8 +13,8 @@ from bpyutils.util.array    import find
 from bpyutils.log           import get_logger
 from bpyutils._compat       import urljoin
 from bpyutils.db            import get_connection
-from gempy.__attr__         import __name__ as NAME
-from gempy.config           import PATH
+from dgemm.__attr__         import __name__ as NAME
+from dgemm.config           import PATH
 
 logger = get_logger(name = NAME)
 

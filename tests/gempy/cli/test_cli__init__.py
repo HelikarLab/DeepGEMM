@@ -2,8 +2,8 @@
 from bpyutils._compat import iteritems, iterkeys
 
 # imports - module imports
-from gempy import cli
-from gempy.cli import get_args
+from dgemm import cli
+from dgemm.cli import get_args
 from bpyutils.util._dict import merge_dict
 
 def test_command():

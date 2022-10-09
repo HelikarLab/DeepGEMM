@@ -2,7 +2,7 @@
 .venv
 .vscode
 ci
-docker/gempy
+docker/dgemm
 .appveyor.yml
 .env
 .gitignore

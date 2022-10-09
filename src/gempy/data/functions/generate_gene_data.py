@@ -2,8 +2,8 @@ import os.path as osp
 import random
 import warnings
 
-from gempy import __name__ as NAME
-from gempy.config import DEFAULT
+from dgemm import __name__ as NAME
+from dgemm.config import DEFAULT
 
 from bpyutils.util.ml      import get_data_dir
 from bpyutils.util.types   import lmap, lfilter
@@ -18,8 +18,8 @@ import cobra
 import pandas as pd
 from tqdm import tqdm
 
-from gempy import settings
-from gempy.model.minimize import minimize_model
+from dgemm import settings
+from dgemm.model.minimize import minimize_model
 
 warnings.filterwarnings("ignore")
 

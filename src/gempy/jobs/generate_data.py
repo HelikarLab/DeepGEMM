@@ -17,12 +17,12 @@ from bpyutils.config   import get_config_path
 from bpyutils.log      import get_logger
 from bpyutils.const    import CPU_COUNT
 
-from gempy.data.functions import (
+from dgemm.data.functions import (
     fetch_models,
     generate_flux_data
 )
 
-from gempy.__attr__ import __name__ as NAME
+from dgemm.__attr__ import __name__ as NAME
 
 logger = get_logger(name = NAME)
 
@@ -59,12 +59,12 @@ def run(*args, **kwargs):
 
     dir_path   = PATH_CACHE
 
-    repo = osp.join(dir_path, "gempy")
+    repo = osp.join(dir_path, "dgemm")
 
     github_username    = getenv("JOBS_GITHUB_USERNAME",    prefix = NAME.upper(), raise_err = True)
     github_oauth_token = getenv("JOBS_GITHUB_OAUTH_TOKEN", prefix = NAME.upper(), raise_err = True)
 
-    url  = "https://github.com/achillesrasquinha/gempy"
+    url  = "https://github.com/achillesrasquinha/dgemm"
 
     logger.info("Updating repo...")
 

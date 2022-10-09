@@ -1,5 +1,5 @@
-# from gempy.__attr__ import __name__ as NAME
-# from gempy.data import get_data_dir
+# from dgemm.__attr__ import __name__ as NAME
+# from dgemm.data import get_data_dir
 
 # def build_model(artifacts_path = None):
 #     dropout_rate  = settings.get("dropout_rate")
@@ -45,8 +45,8 @@ from bpyutils import parallel
 
 # import deeply
 
-from gempy import settings, __name__ as NAME
-from gempy import settings #, dops
+from dgemm import settings, __name__ as NAME
+from dgemm import settings #, dops
 
 warnings.filterwarnings("ignore")
 

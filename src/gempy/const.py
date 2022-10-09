@@ -1,7 +1,7 @@
 from bpyutils.const import CPU_COUNT
 from bpyutils.util.environ import getenv
 
-from gempy import __name__ as NAME
+from dgemm import __name__ as NAME
 
 _PREFIX = NAME.upper()
 
