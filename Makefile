@@ -116,12 +116,13 @@ endif
 
 # https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html#summary
 # setup.py install is deprecated.
+	cd $(BASEDIR)
+
 	$(call log,INFO,Installing ${PROJECT} (${ENVIRONMENT}))
 ifeq (${ENVIRONMENT},development)
-
-	$(PIP) install -e $(BASEDIR) $(OUT)
+	$(PYTHON) setup.py develop $(PIP_ARGS) $(OUT)
 else
-	$(PIP) install $(BASEDIR) $(OUT)
+	$(PYTHON) setup.py install $(PIP_ARGS) $(OUT)
 endif
 
 	$(call log,SUCCESS,Installation Successful)

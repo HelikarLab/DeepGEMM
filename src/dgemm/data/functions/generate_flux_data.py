@@ -21,9 +21,14 @@ from tqdm import tqdm
 from dgemm import settings
 from dgemm.model.minimize import minimize_model
 
+from cobra.io.web import load_model as load_gemm
+from cobra.io import read_sbml_model, write_sbml_model
+
 warnings.filterwarnings("ignore")
 
 logger = log.get_logger(name = NAME)
+
+cobra_config = cobra.Configuration()
 
 CSV_HEADER_PRE  = []
 CSV_HEADER_POST = []
@@ -104,7 +109,7 @@ def _mutate_step(model, output, exclude_rxns = None):
     strategy = random.choice(STRATEGIES)
     return mutate_model_and_save(strategy, model, output, exclude_rxns = exclude_rxns)
 
-def generate_flux_data(sbml_path, **kwargs):
+def generate_flux_data(model_id, **kwargs):
     jobs           = kwargs.get("jobs", settings.get("jobs"))
     data_dir       = get_data_dir(NAME, kwargs.get("data_dir"))
     n_data_points  = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
@@ -112,21 +117,35 @@ def generate_flux_data(sbml_path, **kwargs):
 
     model = None
 
-    logger.info("Generating flux data for model at path: %s" % sbml_path)
+    logger.info("Generating flux data for model: %s" % model_id)
 
-    logger.info("Loading SBML model from path: %s" % sbml_path)
-    model = cobra.io.read_sbml_model(sbml_path)
-    logger.success("Loaded SBML model from path: %s" % sbml_path)
+    logger.info("Loading SBML model: %s" % model_id)
 
-    name  = model.id or model.name or get_random_str()
-    output_csv = osp.join(data_dir, "%s.csv" % name)
+    cobra_config.cache_directory = data_dir
 
+    minimized_model_path = osp.join(data_dir, "%s_minimized.xml" % model_id)
     min_rxns = []
 
-    if min_model:
-        logger.info("Minimizing model: %s" % name)
+    if osp.exists(minimized_model_path):
+        logger.warn("Minimized model already exists: %s" % minimized_model_path)
+        
+        logger.info("Loading minimized model: %s" % model_id)
+        model = read_sbml_model(minimized_model_path)
 
-        min_rxns, minimized_model = minimize_model(model, jobs = jobs)
+        min_rxns = lfilter(lambda x: x.lower_bound == 0 and x.upper_bound == 0, model.reactions)
+    else:
+        model = load_gemm(model_id)
+        logger.success("Loaded SBML model: %s" % model_id)
+        
+
+        if min_model:
+            logger.info("Minimizing model: %s" % name)
+
+            min_rxns, minimized_model = minimize_model(model, jobs = jobs)
+            write_sbml_model(minimized_model, osp.join(data_dir, "%s_minimized.xml" % name))
+    
+    name = model.id or model.name or get_random_str()
+    output_csv = osp.join(data_dir, "%s.csv" % name)
 
     reactions = [r for r in model.reactions if r.id not in min_rxns]
 
@@ -154,5 +173,5 @@ def generate_flux_data(sbml_path, **kwargs):
                 i += 1
                 pbar.update(1)
 
-    logger.success("Generated flux data for model at path: %s" % sbml_path)
+    logger.success("Generated flux data for model: %s" % model_id)
     logger.success("Currently, %s flux data points are available." % len(pd.read_csv(output_csv)))
