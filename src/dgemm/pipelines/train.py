@@ -113,7 +113,7 @@ MODELS = [{
     "class": MLPRegressor,
     "name": "mlp-regressor",
     "params": {
-        "hidden_layer_sizes": (100, 100, 100),
+        "hidden_layer_sizes": (100,),
         # "verbose": True
     }
 }]
@@ -170,9 +170,13 @@ def _train_step(csv_path, *args, **kwargs):
     logger.info("Starting training...")
 
     with parallel.no_daemon_pool(processes = jobs) as pool:
-        fn = build_fn(_train_model_step, X_train = X_train, X_test = X_test,
-            Y_train = y_train, Y_test = y_test, *args, **kwargs)
-        list(pool.map(fn, MODELS))
+        try:
+            fn = build_fn(_train_model_step, X_train = X_train, X_test = X_test,
+                Y_train = y_train, Y_test = y_test, *args, **kwargs)
+            list(pool.map(fn, MODELS))
+        except Exception as e:
+            logger.error("Failed to train model: %s" % e)
+            raise e
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
     logger.info("Initiating Training...")
