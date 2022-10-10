@@ -137,17 +137,17 @@ def generate_flux_data(model_id, **kwargs):
         model = load_gemm(model_id)
         logger.success("Loaded SBML model: %s" % model_id)
         
-
         if min_model:
-            logger.info("Minimizing model: %s" % name)
+            logger.info("Minimizing model: %s" % model_id)
 
             min_rxns, minimized_model = minimize_model(model, jobs = jobs)
-            write_sbml_model(minimized_model, osp.join(data_dir, "%s_minimized.xml" % name))
-    
-    name = model.id or model.name or get_random_str()
-    output_csv = osp.join(data_dir, "%s.csv" % name)
+            write_sbml_model(minimized_model, osp.join(data_dir, "%s_minimized.xml" % model_id))
 
+    name = model.id or model.name or get_random_str()
+    
     reactions = [r for r in model.reactions if r.id not in min_rxns]
+    
+    output_csv = osp.join(data_dir, "%s.csv" % name)
 
     if not osp.exists(output_csv):
         logger.info("Creating output CSV file at path: %s" % output_csv)
@@ -165,6 +165,8 @@ def generate_flux_data(model_id, **kwargs):
         logger.warning("Output CSV file already exists at path: %s" % output_csv)
 
     with tqdm(total = n_data_points, desc = "Generating Flux Data (%s)" % model.id) as pbar:
+
+
         i = 0
         while i < n_data_points:
             success = _mutate_step(model, output_csv, exclude_rxns = min_rxns)

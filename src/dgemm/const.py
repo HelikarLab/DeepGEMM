@@ -23,5 +23,6 @@ DEFAULT = {
 
     "min_react_reaction_retention_list": ("ATPM",),
 
-    "test_size":            0.2
+    "test_size":            0.2,
+    "k_fold":               5
 }

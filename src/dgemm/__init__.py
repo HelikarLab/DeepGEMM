@@ -44,6 +44,7 @@ settings = Settings(location = PATH["CACHE"], defaults = {
     "epochs":               DEFAULT["epochs"],
 
     "test_size":            DEFAULT["test_size"],
+    "k_fold":               DEFAULT["k_fold"]
 })
 
 def get_version_str():

@@ -70,7 +70,8 @@ except ImportError:
     import pandas as dfl
     from sklearn.model_selection import (
         train_test_split, KFold)
-    from sklearn.linear_model import LinearRegression
+    from sklearn.linear_model   import LinearRegression
+    from sklearn.neural_network import MLPRegressor
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
@@ -106,36 +107,43 @@ MODELS = [{
     "class": LinearRegression,
     "name": "linear-regression",
     "params": {
-        "verbose": 1
+        # "verbose": 1
+    }
+}, {
+    "class": MLPRegressor,
+    "name": "mlp-regressor",
+    "params": {
+        "hidden_layer_sizes": (100, 100, 100),
+        # "verbose": True
     }
 }]
 
-def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, *args, **kwargs):
-    model   = model_meta["class"](**model_meta["params"])
-    k_fold  = kwargs.get("k_fold", settings.get("k_fold"))
+def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
+    model  = model_meta["class"](**model_meta.get("params", {}))
+    k_fold = kwargs.get("k_fold", settings.get("k_fold"))
 
     logger.info("Training model: %s" % model_meta["name"])
 
-    k_fold  = KFold(n_splits = k_fold, shuffle = True)
+    k_fold = KFold(n_splits = k_fold, shuffle = True)
 
     for i, (train_index, test_index) in enumerate(k_fold.split(X_train)):
-        x_train, x_test = X_train[train_index], X_train[test_index]
-        y_train, y_test = Y_train[train_index], Y_train[test_index]
+        x_train, x_test = X_train.iloc[train_index], X_train.iloc[test_index]
+        y_train, y_test = Y_train.iloc[train_index], Y_train.iloc[test_index]
+
+        logger.info("Training fold %d/%d" % (i + 1, k_fold.n_splits))
 
         model.fit(x_train, y_train)
 
-        logger.info("Model: %s, Fold: %d, Score: %f" % (
+        logger.info("Model: %s, Fold: %d, Score: %.2E" % (
             model_meta["name"], i, model.score(x_test, y_test)))
 
-    logger.success("Successfully trained model: %s" % model["name"])
+    logger.success("Successfully trained model: %s" % model_meta["name"])
 
     logger.info("Evaluating model...")
 
     score = model.score(X_test, Y_test)
 
-    logger.success("Successfully evaluated model: %s" % model["name"])
-
-    logger.info("Score: %s" % score)
+    logger.success("Successfully evaluated model: %s with score: %.4E" % (model_meta["name"], score))
 
 def _train_step(csv_path, *args, **kwargs):
     jobs    = kwargs.get("jobs", settings.get("jobs"))
@@ -163,7 +171,7 @@ def _train_step(csv_path, *args, **kwargs):
 
     with parallel.no_daemon_pool(processes = jobs) as pool:
         fn = build_fn(_train_model_step, X_train = X_train, X_test = X_test,
-            y_train = y_train, y_test = y_test, *args, **kwargs)
+            Y_train = y_train, Y_test = y_test, *args, **kwargs)
         list(pool.map(fn, MODELS))
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
