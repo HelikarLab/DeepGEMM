@@ -1,5 +1,6 @@
 import os.path as osp
 import warnings
+import random
 
 from bpyutils.util.system import makepath, get_files
 from bpyutils.util.types import build_fn
@@ -14,11 +15,10 @@ from cobra.io import read_sbml_model
 from cobra.util import linear_reaction_coefficients
 import cobra
 
-import deeply
+# import deeply
 
 from dgemm import settings, __name__ as NAME
-from dgemm import settings, dops
-from dgemm.data.util import get_random_model_object_sample
+from dgemm import settings # , dops
 
 warnings.filterwarnings("ignore")
 
@@ -102,7 +102,7 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
     k_fold = kwargs.get("k_fold", settings.get("k_fold"))
 
     logger.info("Watching model: %s" % model_meta["name"])
-    dops.watch(model)
+    # dops.watch(model)
 
     logger.info("Training model: %s" % model_meta["name"])
 
@@ -117,7 +117,7 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
         model.fit(x_train, y_train)
 
         logger.info("Model: %s, Fold: %d, Score: %.4f" % (
-            model_meta["name"], i, model.score(x_val, y_val)))
+            model_meta["name"], i, model.score(x_val, y_val) * 100))
 
     logger.success("Successfully trained model: %s" % model_meta["name"])
 
@@ -125,7 +125,7 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
 
     score = model.score(X_test, Y_test)
 
-    logger.success("Successfully evaluated model: %s with score: %.4f" % (model_meta["name"], score))
+    logger.success("Successfully evaluated model: %s with score: %.4f" % (model_meta["name"], score * 100))
 
 def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir)
@@ -145,6 +145,7 @@ def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args,
     logger.success("Successfully split data into train and test sets.")
 
     X_columns = [column for column in df.columns if "flux" not in column]
+    y_columns = []
     
     if objective or n_y:
         model_id = osp.splitext(osp.basename(csv_path))[0]
@@ -157,18 +158,19 @@ def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args,
 
         logger.info("Loaded GEMM model: %s" % model_id)
 
+        if n_y:
+            y_columns  = list(set(df.columns) - set(X_columns))
+            y_columns  = random.sample(y_columns, int(len(y_columns) * n_y))
+
         if objective:
             objectives = linear_reaction_coefficients(model_gemm)
             objective  = list(iterkeys(objectives))[0]
 
-            y_columns  = ["%s_flux" % objective.id]
-        else:
-            n_reactions = len(model_gemm.reactions)
-            reactions   = get_random_model_object_sample(model_gemm, "reactions", n = int(float(n_y) * n_reactions))
-
-            y_columns   = ["%s_flux" % reaction.id for reaction in reactions]
+            y_columns += ["%s_flux" % objective.id]
     else:
         y_columns = list(set(df.columns) - set(X_columns))
+            
+    logger.info("Using n(y) columns: %s" % len(y_columns))
 
     X_train, X_test, y_train, y_test = train_df[X_columns], test_df[X_columns], \
         train_df[y_columns], test_df[y_columns]
@@ -180,7 +182,7 @@ def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args,
             Y_train = y_train, Y_test = y_test, *args, **kwargs)
         list(pool.map(fn, MODELS))
 
-def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
+def train(data_dir = None, artifacts_path = None, *args, **kwargs):
     logger.info("Initiating Training...")
 
     logger.info("Storing artifacts at path: %s" % artifacts_path)
@@ -198,4 +200,4 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
 
         with parallel.no_daemon_pool(processes = jobs) as pool:
             fn = build_fn(_train_step, data_dir = data_dir, *args, **kwargs)
-            pool.map(fn, data_csv)
+            list(pool.map(fn, data_csv))
