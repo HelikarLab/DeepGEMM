@@ -41,16 +41,25 @@ from bpyutils.util.types import build_fn
 from bpyutils.util.ml import get_data_dir
 from bpyutils.log import get_logger
 from bpyutils.const import CPU_COUNT
+from bpyutils._compat import iterkeys
 from bpyutils import parallel
+
+from cobra.io.web import load_model as load_gemm
+from cobra.io import read_sbml_model
+from cobra.util import linear_reaction_coefficients
+import cobra
 
 # import deeply
 
 from dgemm import settings, __name__ as NAME
 from dgemm import settings #, dops
+from dgemm.data.util import get_random_model_object_sample
 
 warnings.filterwarnings("ignore")
 
 logger = get_logger(NAME)
+
+cobra_config = cobra.Configuration()
 
 try:
     raise ImportError
@@ -70,8 +79,11 @@ except ImportError:
     import pandas as dfl
     from sklearn.model_selection import (
         train_test_split, KFold)
-    from sklearn.linear_model   import LinearRegression
+
+    from sklearn.linear_model import LinearRegression
+    from sklearn.gaussian_process import GaussianProcessRegressor
     from sklearn.neural_network import MLPRegressor
+
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
@@ -110,6 +122,10 @@ MODELS = [{
         # "verbose": 1
     }
 }, {
+    "class": GaussianProcessRegressor,
+    "name": "gaussian-process-regressor",
+
+}, {
     "class": MLPRegressor,
     "name": "mlp-regressor",
     "params": {
@@ -127,15 +143,15 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
     k_fold = KFold(n_splits = k_fold, shuffle = True)
 
     for i, (train_index, test_index) in enumerate(k_fold.split(X_train)):
-        x_train, x_test = X_train.iloc[train_index], X_train.iloc[test_index]
-        y_train, y_test = Y_train.iloc[train_index], Y_train.iloc[test_index]
+        x_train, x_val = X_train.iloc[train_index], X_train.iloc[test_index]
+        y_train, y_val = Y_train.iloc[train_index], Y_train.iloc[test_index]
 
         logger.info("Training fold %d/%d" % (i + 1, k_fold.n_splits))
 
         model.fit(x_train, y_train)
 
-        logger.info("Model: %s, Fold: %d, Score: %.2E" % (
-            model_meta["name"], i, model.score(x_test, y_test)))
+        logger.info("Model: %s, Fold: %d, Score: %.4f" % (
+            model_meta["name"], i, model.score(x_val, y_val)))
 
     logger.success("Successfully trained model: %s" % model_meta["name"])
 
@@ -143,10 +159,11 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
 
     score = model.score(X_test, Y_test)
 
-    logger.success("Successfully evaluated model: %s with score: %.4E" % (model_meta["name"], score))
+    logger.success("Successfully evaluated model: %s with score: %.4f" % (model_meta["name"], score))
 
-def _train_step(csv_path, *args, **kwargs):
-    jobs    = kwargs.get("jobs", settings.get("jobs"))
+def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args, **kwargs):
+    data_dir = get_data_dir(NAME, data_dir)
+    jobs = kwargs.get("jobs", settings.get("jobs"))
 
     logger.info("Training on CSV file: %s" % csv_path)
 
@@ -162,7 +179,30 @@ def _train_step(csv_path, *args, **kwargs):
     logger.success("Successfully split data into train and test sets.")
 
     X_columns = [column for column in df.columns if "flux" not in column]
-    y_columns = list(set(df.columns) - set(X_columns))
+    
+    if objective or n_y:
+        model_id = osp.splitext(osp.basename(csv_path))[0]
+
+        cobra_config.cache_directory = data_dir
+
+        path_model = osp.join(data_dir, "%s_minimized.xml" % model_id)
+
+        model_gemm = read_sbml_model(path_model)
+
+        logger.info("Loaded GEMM model: %s" % model_id)
+
+        if objective:
+            objectives = linear_reaction_coefficients(model_gemm)
+            objective  = list(iterkeys(objectives))[0]
+
+            y_columns  = ["%s_flux" % objective.id]
+        else:
+            n_reactions = len(model_gemm.reactions)
+            reactions   = get_random_model_object_sample(model_gemm, "reactions", n = int(float(n_y) * n_reactions))
+
+            y_columns   = ["%s_flux" % reaction.id for reaction in reactions]
+    else:
+        y_columns = list(set(df.columns) - set(X_columns))
 
     X_train, X_test, y_train, y_test = train_df[X_columns], test_df[X_columns], \
         train_df[y_columns], test_df[y_columns]
@@ -200,9 +240,9 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     # width, height = settings.get("image_width"), \
     #     settings.get("image_height")
 
-    data_dir = get_data_dir(NAME, data_dir)
+    data_dir  = get_data_dir(NAME, data_dir)
 
-    data_csv = get_files(data_dir, "*.csv")
+    data_csv  = get_files(data_dir, "*.csv")
     
     if len(data_csv) == 0:
         logger.warn("No CSV file found in directory: %s" % data_dir)
@@ -210,8 +250,12 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
         logger.info("Found %s CSV files" % len(data_csv))
 
         with parallel.no_daemon_pool(processes = jobs) as pool:
-            fn = build_fn(_train_step, jobs = jobs)
-            pool.map(fn, data_csv)
+            try:
+                fn = build_fn(_train_step, data_dir = data_dir, *args, **kwargs)
+                pool.map(fn, data_csv)
+            except Exception as e:
+                logger.error("Failed to train model: %s" % e)
+                raise e
 
     # args = dict(
     #     batch_size = batch_size,
@@ -220,11 +264,3 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     #     mask_size  = output_shape,
     #     shuffle    = True
     # )
-
-    # train_, val, test = [
-    #     ImageMaskGenerator(path_img % type_, path_msk % type_, **args)
-    #         for type_ in SPLIT_TYPES
-    # ]
-
-    # trainer = Trainer(artifacts_path = artifacts_path)
-    # history = trainer.fit(model, train_, val = val, epochs = epochs, batch_size = batch_size)

@@ -22,6 +22,7 @@ def get_all_model_ids():
     model_ids = []
     for repository in MODEL_REPOSITORIES:
         if hasattr(repository, "get_ids"):
+            logger.info("Fetching model ids from repository: %s", repository)
             model_ids.extend(repository.get_ids())
     return model_ids
 

@@ -20,6 +20,7 @@ from tqdm import tqdm
 
 from dgemm import settings
 from dgemm.model.minimize import minimize_model
+from dgemm.data.util import get_random_model_object_sample
 
 from cobra.io.web import load_model as load_gemm
 from cobra.io import read_sbml_model, write_sbml_model
@@ -36,23 +37,8 @@ CSV_HEADER_POST = []
 MINIMUM_LOWER_BOUND = -1000
 MAXIMUM_UPPER_BOUND =  1000
 
-MAXIMUM_KNOCKOUTS   = 3
-
-def get_random_model_object_ko_sample(model, type_, n = MAXIMUM_KNOCKOUTS, exclude = None):
-    exclude = exclude or []
-
-    objekt = getattr(model, type_)
-    objekt = lfilter(lambda x: x.id not in exclude, objekt)
-    
-    n      = max(1, min(n, len(objekt)))
-
-    rand_n = random.randint(1, n)
-    sample = random.sample(objekt, rand_n)
-
-    return sample
-
 def knock_out_random_genes(model, output, exclude_rxns = None):
-    ko_genes = get_random_model_object_ko_sample(model, "genes", n = MAXIMUM_KNOCKOUTS)
+    ko_genes = get_random_model_object_sample(model, "genes")
 
     with model:
         for gene in ko_genes:
@@ -60,7 +46,7 @@ def knock_out_random_genes(model, output, exclude_rxns = None):
         return optimize_model_and_save(model, output)
 
 def knock_out_random_reactions(model, output, exclude_rxns = None):
-    ko_reactions = get_random_model_object_ko_sample(model, "reactions", n = MAXIMUM_KNOCKOUTS, exclude = exclude_rxns)
+    ko_reactions = get_random_model_object_sample(model, "reactions", exclude = exclude_rxns)
     
     with model:
         for reaction in ko_reactions:
@@ -69,7 +55,7 @@ def knock_out_random_reactions(model, output, exclude_rxns = None):
 
 def change_random_reaction_bounds(model, output, exclude_rxns = None):
     n = random.randint(1, len(model.reactions))
-    random_reactions = get_random_model_object_ko_sample(model, "reactions", n = n, exclude = exclude_rxns)
+    random_reactions = get_random_model_object_sample(model, "reactions", n = n, exclude = exclude_rxns)
 
     with model:
         for reaction in random_reactions:
