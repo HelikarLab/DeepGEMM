@@ -1,38 +1,3 @@
-# from dgemm.__attr__ import __name__ as NAME
-# from dgemm.data import get_data_dir
-
-# def build_model(artifacts_path = None):
-#     dropout_rate  = settings.get("dropout_rate")
-#     batch_norm    = settings.get("batch_norm")
-
-#     from deeply.model.gan import GAN
-
-#     model = GAN()
-#     # do something ...
-#     pass
-
-# def train(data_dir = None, artifacts_dir = None, check = False, *args, **kwargs):
-#     batch_size    = 1 if check else settings.get("batch_size")
-#     learning_rate = settings.get("learning_rate")
-#     epochs        = 1 if check else settings.get("epochs")
-
-#     data_dir = get_data_dir(NAME, data_dir)
-#     model    = build_model()
-    
-#     dops.watch(model)
-
-#     # do something ...
-
-
-# from tensorflow.keras.optimizers import Adam
-# from tensorflow.keras.metrics    import binary_accuracy
-
-# from deeply.model.gan     import GAN
-
-# from deeply.datasets.util import SPLIT_TYPES
-# from deeply.generators    import ImageMaskGenerator
-# from deeply.losses        import dice_loss
-
 import os.path as osp
 import warnings
 
@@ -49,10 +14,10 @@ from cobra.io import read_sbml_model
 from cobra.util import linear_reaction_coefficients
 import cobra
 
-# import deeply
+import deeply
 
 from dgemm import settings, __name__ as NAME
-from dgemm import settings #, dops
+from dgemm import settings, dops
 from dgemm.data.util import get_random_model_object_sample
 
 warnings.filterwarnings("ignore")
@@ -67,7 +32,12 @@ try:
     import dask.dataframe as dfl
     from dask_ml.model_selection import (
         train_test_split, KFold)
-    from dask_ml.linear_model import LinearRegression
+
+    from dask_ml.linear_model       import LinearRegression
+    from dask_ml.gaussian_process   import GaussianProcessRegressor
+    from dask_ml.ensemble           import RandomForestRegressor
+    from dask_ml.svm                import SVR
+    from dask_ml.neural_network     import MLPRegressor
 
     from dask.distributed import Client
     Client()
@@ -80,10 +50,11 @@ except ImportError:
     from sklearn.model_selection import (
         train_test_split, KFold)
 
-    from sklearn.linear_model import LinearRegression
-    from sklearn.gaussian_process import GaussianProcessRegressor
-    from sklearn.neural_network import MLPRegressor
-
+    from sklearn.linear_model       import LinearRegression
+    from sklearn.gaussian_process   import GaussianProcessRegressor
+    from sklearn.ensemble           import RandomForestRegressor
+    from sklearn.svm                import SVR
+    from sklearn.neural_network     import MLPRegressor
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
@@ -97,16 +68,6 @@ def build_model(artifacts_path = None):
         decoder_dropout_rate = decoder_dropout_rate,
         decoder_batch_norm = decoder_batch_norm
     )
-
-    # width, height = settings.get("image_width"), \
-    #     settings.get("image_height")
-
-    # unet = UNet(x = width, y = height, channels = 3, n_classes = 1,
-    #     final_activation = "sigmoid", batch_norm = batch_norm, 
-    #     dropout_rate = dropout_rate, padding = "same",
-    #     backbone = "efficient-net-b7", backbone_weights = "imagenet")
-
-    # # unet.
     
     if artifacts_path:
         path_plot = osp.join(artifacts_path, "model.png")
@@ -117,26 +78,31 @@ def build_model(artifacts_path = None):
 
 MODELS = [{
     "class": LinearRegression,
-    "name": "linear-regression",
-    "params": {
-        # "verbose": 1
-    }
+    "name": "linear-regression"
 }, {
     "class": GaussianProcessRegressor,
-    "name": "gaussian-process-regressor",
-
+    "name": "gaussian-process-regressor"
+}, {
+    "class": RandomForestRegressor,
+    "name": "random-forest-regressor" 
+}, {
+    "class": SVR,
+    "name": "support-vector-regressor" 
 }, {
     "class": MLPRegressor,
     "name": "mlp-regressor",
     "params": {
         "hidden_layer_sizes": (100,),
-        # "verbose": True
+        "verbose": True
     }
 }]
 
 def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
     model  = model_meta["class"](**model_meta.get("params", {}))
     k_fold = kwargs.get("k_fold", settings.get("k_fold"))
+
+    logger.info("Watching model: %s" % model_meta["name"])
+    dops.watch(model)
 
     logger.info("Training model: %s" % model_meta["name"])
 
@@ -210,13 +176,9 @@ def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args,
     logger.info("Starting training...")
 
     with parallel.no_daemon_pool(processes = jobs) as pool:
-        try:
-            fn = build_fn(_train_model_step, X_train = X_train, X_test = X_test,
-                Y_train = y_train, Y_test = y_test, *args, **kwargs)
-            list(pool.map(fn, MODELS))
-        except Exception as e:
-            logger.error("Failed to train model: %s" % e)
-            raise e
+        fn = build_fn(_train_model_step, X_train = X_train, X_test = X_test,
+            Y_train = y_train, Y_test = y_test, *args, **kwargs)
+        list(pool.map(fn, MODELS))
 
 def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
     logger.info("Initiating Training...")
@@ -224,21 +186,6 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     logger.info("Storing artifacts at path: %s" % artifacts_path)
 
     jobs = kwargs.get("jobs", settings.get("jobs"))
-
-    # batch_size    = 1 if check else settings.get("batch_size")
-    # learning_rate = settings.get("learning_rate")
-    # epochs        = 1 if check else settings.get("epochs")
-    
-    # model = build_model(artifacts_path = artifacts_path)
-    # model.compile(optimizer = Adam(learning_rate = learning_rate),
-    #     loss = dice_loss, metrics = [binary_accuracy])
-
-    # dops.watch(model)
-
-    # output_shape = model.output_shape[1:-1]
-
-    # width, height = settings.get("image_width"), \
-    #     settings.get("image_height")
 
     data_dir  = get_data_dir(NAME, data_dir)
 
@@ -250,17 +197,5 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
         logger.info("Found %s CSV files" % len(data_csv))
 
         with parallel.no_daemon_pool(processes = jobs) as pool:
-            try:
-                fn = build_fn(_train_step, data_dir = data_dir, *args, **kwargs)
-                pool.map(fn, data_csv)
-            except Exception as e:
-                logger.error("Failed to train model: %s" % e)
-                raise e
-
-    # args = dict(
-    #     batch_size = batch_size,
-    #     # color_mode = "grayscale",
-    #     image_size = (width, height),
-    #     mask_size  = output_shape,
-    #     shuffle    = True
-    # )
+            fn = build_fn(_train_step, data_dir = data_dir, *args, **kwargs)
+            pool.map(fn, data_csv)

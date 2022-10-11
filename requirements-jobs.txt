@@ -17,8 +17,8 @@ docstr-coverage
 bioservices==1.10.2
 tqdm
 requests
-bpyutils
 git+https://github.com/achillesrasquinha/bpyutils.git@develop#egg=bpyutils
+git+https://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
 git+https://github.com/achillesrasquinha/cobrapy.git@custom#egg=cobra
 wandb
 # pydot
