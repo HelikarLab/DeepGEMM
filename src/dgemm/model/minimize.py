@@ -48,6 +48,7 @@ from dgemm.model.util import (
     find_reaction,
     find_mle_reactions
 )
+from dgemm.model.optimize import optimize as optimize_model
 from dgemm.const import DEFAULT
 from dgemm import __name__ as NAME
 
@@ -64,23 +65,31 @@ cobra_logger.setLevel(log.DEBUG)
 cobra_config = cobra.Configuration()
 cobra_config.tolerance = 1e-6
 
+def _single_syntehtic_lethality_step(rxn, m, cutoff = 0.01, objective_value = None):
+    with m as copy:
+        rxn = copy.reactions.get_by_id(rxn)
+        rxn.knock_out()
+
+        solution = copy.slim_optimize()
+
+        if np.isnan(solution) or solution < (cutoff * objective_value):
+            return rxn.id
+
 def single_synthetic_lethality(m, cutoff = 0.01, eliminate = [], tolerance = None, processes = None):
     """
         Get single synthetic lethal reactions.
     """ 
     tolerance = normalize_cutoff(m, tolerance)
     processes = processes or CPU_COUNT
-    logger.info("Optimizing using Synthetic Lethality...")
-    solution  = m.optimize(objective_sense = "maximize")
+    logger.info("Optimizing (taxicab norm) using Synthetic Lethality...")
+    solution  = optimize_model(m, type_ = None, objective_sense = "maximize")
     objective_value = solution.objective_value
     logger.info("Optimized. Objective Value: %s" % objective_value)
     
     fluxes = solution.fluxes
 
     pruned_rxns = list(
-        set(fluxes[abs(fluxes) > tolerance] \
-         \
-        .index) - set(eliminate)
+        set(fluxes[abs(fluxes) > tolerance].index) - set(eliminate)
     )
     logger.info("Pruned Reactions: %s" % len(pruned_rxns))
 
@@ -94,14 +103,14 @@ def single_synthetic_lethality(m, cutoff = 0.01, eliminate = [], tolerance = Non
     # with parallel.no_daemon_pool(processes = processes) as pool:
     #     fn = build_fn(_single_syntehtic_lethality_step,
     #                      m = m, cutoff = cutoff, objective_value = objective_value)
-    #     for rxn in tq.tqdm(pool.imap(fn, zip(range(len(pruned_rxns)), pruned_rxns)), total = len(pruned_rxns), desc = "Synthetic Lethality, checking for objective on knockout..."):
+    #     for rxn in tq.tqdm(pool.imap(fn, pruned_rxns), total = len(pruned_rxns), desc = "Synthetic Lethality, checking for objective on knockout..."):
     #         if rxn:
     #             rxn_ids.append(rxn)
 
     reaction_deletions = single_reaction_deletion(m, processes = processes, reaction_list = pruned_rxns)
     for deletion_data in reaction_deletions.itertuples():
         if np.isnan(deletion_data.growth) or deletion_data.growth < (cutoff * objective_value):
-            rxn_ids.append(squash(deletion_data.ids))
+            rxn_ids.append(squash(list(deletion_data.ids)))
     
     return rxn_ids
 
@@ -201,18 +210,6 @@ def delete_reactions(m, rxns, remove_orphans = False):
         reaction.delete(remove_orphans = remove_orphans)
     return m
 
-NORM_TYPES = ('l1', 'l2')
-
-def model_optimize(m, norm = 'l1'):
-    if norm not in NORM_TYPES:
-        raise ValueError('norm types must be %s' % NORM_TYPES)
-        
-    if norm == 'l1':
-        return m.optimize()
-    else:
-        # l2 norm - minimize the euclidean distance
-        pass
-
 def cut_off_obj_rxn_lb(m, growth_rate_cutoff = 1):
     # perform fba to obtain maximum growth rate of objective reaction
     logger.info("Performing FBA to obtain maximum growth rate of objective reaction...")
@@ -245,7 +242,7 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
     """
     minimized = m.copy()
     tolerance = normalize_cutoff(m, tolerance)
-    
+
     maintain_map = dict_from_list(maintain)
     
     logger.info("Using tolerance: %s" % tolerance)
@@ -254,7 +251,6 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
     
     # identifiy reaction classes - blocked, zero flux and mle (metabolically 
     # less efficient) reactions
-    
     remove_reactions = []
     pfba_opt_rxns = []
     
@@ -278,9 +274,6 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
         zero_flux_rxns = []
 
         logger.info("Finding zero-flux reactions with FVA...")
-        fva_solution = flux_variability_analysis(minimized_copy,
-            fraction_of_optimum = tolerance, processes = jobs)
-
         zero_flux_rxns = get_fva_mapped_rxns(minimized_copy,
             fn = lambda min_f, max_f: abs(min_f) < tolerance and abs(max_f) < tolerance,
             fraction_of_optimum = tolerance, processes = jobs)
@@ -324,22 +317,27 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
         logger.info("Finding optimal reactions...")
         pfba_opt_rxns = fva_irr_rxns
 
+        # pfba_opt_rxns = lfilter(lambda x: not x.endswith("_reverse"), list(pfba_opt_rxns))
+        # logger.info("Found %s pFBA optimal reactions (after removing reverse reactions)." % len(pfba_opt_rxns))
+        pfba_opt_rxns = list(set(lmap(lambda x: x.replace("_reverse", ""), pfba_opt_rxns)))
+        
         pfba_opt_rxns = np.setdiff1d(pfba_opt_rxns, mle_rxns)
         pfba_opt_rxns = np.setdiff1d(pfba_opt_rxns, pfba_essential_rxns)
-        pfba_opt_rxns = lfilter(lambda x: not x.endswith("_reverse"), list(pfba_opt_rxns))
         
         logger.info("Found %s pfba opt reactions." % len(pfba_opt_rxns))
         logger.info("pfba opt reactions are: %s" % pfba_opt_rxns)
 
         remove_reactions += mle_rxns
         
-    pfba_opt_rxns = lfilter(lambda x: x in minimized.reactions, pfba_opt_rxns)
-    logger.info("Using %s pfba opt reactions." % len(pfba_opt_rxns))
-    
     # remove the reaction classes from the model
     logger.info("Removing %s reaction classes from model..." % len(remove_reactions))
     for reaction in remove_reactions:
         minimized.reactions.get_by_id(reaction).knock_out()
+
+    pfba_opt_rxns = lfilter(lambda x: x in minimized.reactions, pfba_opt_rxns)
+
+    pfba_opt_rxns = np.setdiff1d(pfba_opt_rxns, maintain)
+    logger.info("Using %s pfba opt reactions." % len(pfba_opt_rxns))
 
     o_rxn = []
     o_rxn_sum = []
@@ -349,7 +347,6 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
             reaction = min_copy.reactions.get_by_id(opt_rxn_id)
             reaction.knock_out()
             
-#             solution = model_optimize(min_copy, norm = 'l2')
             solution = min_copy.optimize(objective_sense = 'maximize')
             fluxes   = solution.fluxes
             objective_value = solution.objective_value
@@ -380,18 +377,19 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
                     o_rxn.append(abs_fluxes)
                     o_rxn_sum.append(sum(abs_fluxes))
 
-    min_react = np.amin(o_rxn_sum)
-    logger.info("MinReact: %s" % min_react)
-
-    min_react_idx  = np.where(o_rxn_sum == min_react)[0][0]
-    min_react_rxns = o_rxn[min_react_idx]
-
     min_rxns = []
-    
-    for i, reaction in enumerate(minimized.reactions):
-        if not min_react_rxns[i]:
-            min_rxns.append(reaction.id)
-            reaction.knock_out()
+
+    if o_rxn_sum:
+        min_react = np.amin(o_rxn_sum)
+        logger.info("MinReact: %s" % min_react)
+
+        min_react_idx  = np.where(o_rxn_sum == min_react)[0][0]
+        min_react_rxns = o_rxn[min_react_idx]
+
+        for i, reaction in enumerate(minimized.reactions):
+            if not min_react_rxns[i]:
+                min_rxns.append(reaction.id)
+                reaction.knock_out()
 
     return min_rxns, minimized
 
