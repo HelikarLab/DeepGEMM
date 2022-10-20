@@ -43,7 +43,7 @@ def knock_out_random_genes(model, output, exclude_rxns = None):
     with model:
         for gene in ko_genes:
             gene.knock_out()
-        return optimize_model_and_save(model, output)
+        return optimize_model_and_save(model, output, strategy = "knock_out_random_genes")
 
 def knock_out_random_reactions(model, output, exclude_rxns = None):
     ko_reactions = get_random_model_object_sample(model, "reactions", exclude = exclude_rxns)
@@ -51,7 +51,7 @@ def knock_out_random_reactions(model, output, exclude_rxns = None):
     with model:
         for reaction in ko_reactions:
             reaction.knock_out()
-        return optimize_model_and_save(model, output)
+        return optimize_model_and_save(model, output, strategy = "knock_out_random_reactions")
 
 def change_random_reaction_bounds(model, output, exclude_rxns = None):
     n = random.randint(1, len(model.reactions))
@@ -64,9 +64,15 @@ def change_random_reaction_bounds(model, output, exclude_rxns = None):
                 reaction.upper_bound = random.uniform(0, MAXIMUM_UPPER_BOUND)
             else:
                 reaction.upper_bound = random.uniform(reaction.lower_bound, MAXIMUM_UPPER_BOUND)
-        return optimize_model_and_save(model, output)
+        return optimize_model_and_save(model, output, strategy = "change_random_reaction_bounds")
 
-def optimize_model_and_save(model, output, **kwargs):
+STRATEGY_CODE = {
+    "knock_out_random_genes"          : 0,
+    "knock_out_random_reactions"      : 1,
+    "change_random_reaction_bounds"   : 2
+}
+
+def optimize_model_and_save(model, output, strategy, **kwargs):
     solution = model.optimize()
     success  = False
 
@@ -74,6 +80,7 @@ def optimize_model_and_save(model, output, **kwargs):
         fluxes = list(solution.fluxes)
 
         row  = flatten(lmap(lambda x: x.bounds, model.reactions))
+        row += [STRATEGY_CODE[strategy]]
         row += fluxes
 
         write_csv(output, row, mode = "a+")
@@ -83,13 +90,19 @@ def optimize_model_and_save(model, output, **kwargs):
     return success
 
 def mutate_model_and_save(strategy, model, output, exclude_rxns = None):
-    return strategy(model, output, exclude_rxns = exclude_rxns)
+    func = strategy["func"]
+    return func(model, output, exclude_rxns = exclude_rxns)
 
-STRATEGIES = [
-    knock_out_random_genes,
-    knock_out_random_reactions,
-    change_random_reaction_bounds
-]
+STRATEGIES = [{
+    "name": "knock_out_random_genes",
+    "func": knock_out_random_genes
+}, {
+    "name": "knock_out_random_reactions",
+    "func": knock_out_random_reactions
+}, {
+    "name": "change_random_reaction_bounds",
+    "func": change_random_reaction_bounds
+}]
 
 def _mutate_step(model, output, exclude_rxns = None):
     strategy = random.choice(STRATEGIES)
@@ -131,7 +144,7 @@ def generate_flux_data(model_id, **kwargs):
 
     name = model.id or model.name or get_random_str()
     
-    reactions = [r for r in model.reactions if r.id not in min_rxns]
+    reactions  = [r for r in model.reactions if r.id not in min_rxns]
     
     output_csv = osp.join(data_dir, "%s.csv" % name)
 
@@ -143,7 +156,7 @@ def generate_flux_data(model_id, **kwargs):
         )
 
         reaction_flux_columns = lmap(lambda x: "%s_flux" % x.id, reactions)
-        header = CSV_HEADER_PRE + reaction_columns + reaction_flux_columns + CSV_HEADER_POST
+        header = CSV_HEADER_PRE + reaction_columns + ["mutation_strategy"] + reaction_flux_columns + CSV_HEADER_POST
         write_csv(output_csv, header)
 
         logger.success("Created output CSV file at path: %s" % output_csv)
@@ -151,8 +164,6 @@ def generate_flux_data(model_id, **kwargs):
         logger.warning("Output CSV file already exists at path: %s" % output_csv)
 
     with tqdm(total = n_data_points, desc = "Generating Flux Data (%s)" % model.id) as pbar:
-
-
         i = 0
         while i < n_data_points:
             success = _mutate_step(model, output_csv, exclude_rxns = min_rxns)

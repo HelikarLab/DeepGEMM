@@ -1,4 +1,5 @@
 import os.path as osp
+from statistics import LinearRegression
 import warnings
 import random
 
@@ -26,35 +27,11 @@ logger = get_logger(NAME)
 
 cobra_config = cobra.Configuration()
 
-try:
-    raise ImportError
-    
-    import dask.dataframe as dfl
-    from dask_ml.model_selection import (
-        train_test_split, KFold)
+from deeply.integrations.imports import import_ds_module
 
-    from dask_ml.linear_model       import LinearRegression
-    from dask_ml.gaussian_process   import GaussianProcessRegressor
-    from dask_ml.ensemble           import RandomForestRegressor
-    from dask_ml.svm                import SVR
-    from dask_ml.neural_network     import MLPRegressor
-
-    from dask.distributed import Client
-    Client()
-
-    logger.info("Using Dask for parallel processing")
-except ImportError:
-    logger.warn("Dask is not installed, using pandas, scikit-learn instead")
-
-    import pandas as dfl
-    from sklearn.model_selection import (
-        train_test_split, KFold)
-
-    from sklearn.linear_model       import LinearRegression
-    from sklearn.gaussian_process   import GaussianProcessRegressor
-    from sklearn.ensemble           import RandomForestRegressor
-    from sklearn.svm                import SVR
-    from sklearn.neural_network     import MLPRegressor
+dfl = import_ds_module("pandas")
+KFold = import_ds_module("sklearn.model_selection.KFold")
+train_test_split = import_ds_module("sklearn.model_selection.train_test_split")
 
 def build_model(artifacts_path = None):
     encoder_dropout_rate = settings.get("encoder_dropout_rate")
@@ -77,19 +54,19 @@ def build_model(artifacts_path = None):
     return gan
 
 MODELS = [{
-    "class": LinearRegression,
+    "class": import_ds_module("sklearn.linear_model.LinearRegression"),
     "name": "linear-regression"
 }, {
-    "class": GaussianProcessRegressor,
+    "class": import_ds_module("sklearn.gaussian_process.GaussianProcessRegressor"),
     "name": "gaussian-process-regressor"
 }, {
-    "class": RandomForestRegressor,
+    "class": import_ds_module("sklearn.ensemble.RandomForestRegressor"),
     "name": "random-forest-regressor" 
 }, {
-    "class": SVR,
+    "class": import_ds_module("sklearn.svm.SVR"),
     "name": "support-vector-regressor" 
 }, {
-    "class": MLPRegressor,
+    "class": import_ds_module("sklearn.neural_network.MLPRegressor"),
     "name": "mlp-regressor",
     "params": {
         "hidden_layer_sizes": (100,),
@@ -128,8 +105,9 @@ def _train_model_step(model_meta, X_train, X_test, Y_train, Y_test, **kwargs):
     logger.success("Successfully evaluated model: %s with score: %.4f" % (model_meta["name"], score * 100))
 
 def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args, **kwargs):
-    data_dir = get_data_dir(NAME, data_dir)
-    jobs = kwargs.get("jobs", settings.get("jobs"))
+    data_dir  = get_data_dir(NAME, data_dir)
+    jobs      = kwargs.get("jobs", settings.get("jobs"))
+    minimized = kwargs.get("minimized", False)
 
     logger.info("Training on CSV file: %s" % csv_path)
 
@@ -152,9 +130,11 @@ def _train_step(csv_path, data_dir = None, objective = False, n_y = None, *args,
 
         cobra_config.cache_directory = data_dir
 
-        path_model = osp.join(data_dir, "%s_minimized.xml" % model_id)
-
-        model_gemm = read_sbml_model(path_model)
+        if minimized:
+            path_model = osp.join(data_dir, "%s_minimized.xml" % model_id)
+            model_gemm = read_sbml_model(path_model)
+        else:
+            model_gemm = load_gemm(model_id)
 
         logger.info("Loaded GEMM model: %s" % model_id)
 
