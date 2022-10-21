@@ -27,7 +27,7 @@ def min_model(model_id, jobs = None, **kwargs):
         min_rxns, model, minimized = minimize_model(model_id, jobs = jobs)
         end    = time.time()
 
-        path_model = osp.join(PATH["CACHE"], f"{model_id}_minimized.json")
+        path_model = osp.join(PATH["CACHE"], f"{model_id}_minimized.sbml")
         cobra.io.write_sbml_model(minimized, path_model)
 
         n_rxns = len(model.reactions)
@@ -52,13 +52,14 @@ def min_model(model_id, jobs = None, **kwargs):
         logger.error(f"Failed to generate data for model {model_id}: {e}")
 
 def run(*args, **kwargs):
+    jobs = kwargs.get("jobs", CPU_COUNT)
     artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
     
     filename      = osp.join(artifacts_dir, "%s.json" % KIND)
     stats_logger  = JSONLogger(filename)
 
     exclude = list(stats_logger.store)
-    perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT, kwargs = {
+    perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = jobs, kwargs = {
         "artifacts_dir": artifacts_dir,
         "logger_fpath": filename
     })

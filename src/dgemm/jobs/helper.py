@@ -16,37 +16,59 @@ logger = log.get_logger(__name__)
 DEFAULT_ARTIFACTS_DIR = osp.join(osp.expanduser("~"), "dgemm-artifacts")
 makedirs(DEFAULT_ARTIFACTS_DIR, exist_ok = True)
 
-def plot_3d_graph(stats, x_label, y_label, z_label, prefix, suffix = "", fontsize_label = 16, dir_path = ""):
+def plot_3d_graph(stats, x_feat, y_feat, z_feat, prefix, suffix = "", dir_path = "", *args, **kwargs):
+    x_label = kwargs.get("x_label", x_feat)
+    y_label = kwargs.get("y_label", y_feat)
+    z_label = kwargs.get("z_label", z_feat)
+
+    marker_size    = kwargs.get("marker_size", 10)
+    fontname       = kwargs.get("fontname", None)
+    fontsize_label = kwargs.get("fontsize_label", 10)
+    title          = kwargs.get("title", None)
+
     import matplotlib.pyplot as pplt
     from mpl_toolkits import mplot3d
 
-    fig = pplt.figure(figsize = (20, 16))
+    pplt.style.use("seaborn-v0_8-paper")
+
+    # fig = pplt.figure(figsize = (12, 8))
     ax  = pplt.axes(projection = "3d")
 
     labels = [x_label, y_label, z_label]
 
     x, y, z = [], [], []
     for _, item in iteritems(stats):
-        x.append(item[x_label])
-        y.append(item[y_label])
-        z.append(item[z_label])
+        x.append(item[x_feat])
+        y.append(item[y_feat])
+        z.append(item[z_feat])
 
-    ax.scatter(x, y, z, c = z, cmap='viridis', linewidth=0.5)
+    ax.scatter(x, y, z, c = z, cmap='viridis', linewidth=0.5, s = marker_size)
 
-    # for model_id, item in iteritems(stats_logger.store):
-    #     x, y, z = item[x_label], item[y_label], item[z_label]
-    #     ax.text3D(x, y, z, model_id, fontsize = 8,
-    #         horizontalalignment = "left", verticalalignment = "bottom",
-    #         transform = ax.transData, zdir = "z")
+    z_max = max(z)
 
-    ax.set_xlabel(labels[0])
-    ax.set_ylabel(labels[1])
-    ax.set_zlabel(labels[2])
+    for model_id, item in iteritems(stats):
+        x, y, z = item[x_feat], item[y_feat], item[z_feat]
+
+        if z > 0.5 * z_max:
+            ax.text3D(x, y, z, model_id, fontsize = 4, bbox = dict(facecolor = "white", alpha = 0.3, boxstyle = "round"),
+                horizontalalignment = "left", verticalalignment = "bottom",
+                transform = ax.transData, zdir = "x")
+
+    ax.set_xlabel(labels[0], fontsize = fontsize_label, fontname = fontname)
+    ax.set_ylabel(labels[1], fontsize = fontsize_label, fontname = fontname)
+    ax.set_zlabel(labels[2], fontsize = fontsize_label, fontname = fontname)
+
+    if title is not None:
+        ax.set_title(title, fontsize = fontsize_label, fontname = fontname)
+
+    if title:
+        ax.set_title(title, fontsize = fontsize_label)
 
     filename = "%s%s.png" % (prefix, ("-" + suffix) if suffix else "")
     filepath = osp.join(dir_path, filename)
 
-    pplt.savefig(filepath)
+    pplt.tight_layout()
+    pplt.savefig(filepath, dpi = 300)
 
     pplt.close()
 
