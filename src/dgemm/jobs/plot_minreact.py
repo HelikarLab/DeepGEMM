@@ -2,7 +2,7 @@ import os.path as osp
 import time
 
 from dgemm.model.minimize import minimize_model
-from dgemm.jobs.helper import perform_on_models, plot_3d_graph
+from dgemm.jobs.helper import perform_on_models, plot_3d_graph, DEFAULT_ARTIFACTS_DIR
 from dgemm.config import PATH
 
 from bpyutils import log
@@ -16,7 +16,7 @@ KIND   = "minreact"
 
 stats_logger = JSONLogger("%s.json" % KIND)
 
-def min_model(model_id, jobs = None):
+def min_model(model_id, jobs = None, artifacts_dir = DEFAULT_ARTIFACTS_DIR):
     logger.info("Generating data for model %s...", model_id)
 
     try:
@@ -41,11 +41,17 @@ def min_model(model_id, jobs = None):
         stats_logger.save()
         
         logger.info("Plotting graph...")
-        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "min_reactions", prefix = KIND, suffix = "minimized reactions")
-        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "time", prefix = KIND, suffix = "time")
+        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "min_reactions", prefix = KIND, suffix = "minimized reactions",
+                      dir_path = artifacts_dir)
+        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "time", prefix = KIND, suffix = "time",
+                      dir_path = artifacts_dir)
     except Exception as e:
         logger.error(f"Failed to generate data for model {model_id}: {e}")
 
 def run(*args, **kwargs):
+    artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
+
     exclude = list(stats_logger.store)
-    perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT)
+    perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT, kwargs = {
+        "artifacts_dir": artifacts_dir
+    })

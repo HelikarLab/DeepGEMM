@@ -1,9 +1,11 @@
 import random
+import os.path as osp
 
 from cobra.io.web.load import DEFAULT_REPOSITORIES, load_model
 
 from bpyutils.util.types import build_fn
 from bpyutils.util.array import flatten, sequencify
+from bpyutils.util.system import makedirs
 from bpyutils import parallel, log
 from bpyutils._compat import iteritems
 
@@ -11,7 +13,10 @@ from tqdm.auto import tqdm as tq
 
 logger = log.get_logger(__name__)
 
-def plot_3d_graph(stats, x_label, y_label, z_label, prefix, suffix = "", fontsize_label = 16):
+DEFAULT_ARTIFACTS_DIR = osp.join(osp.expanduser("~"), "dgemm-artifacts")
+makedirs(DEFAULT_ARTIFACTS_DIR, exist_ok = True)
+
+def plot_3d_graph(stats, x_label, y_label, z_label, prefix, suffix = "", fontsize_label = 16, dir_path = ""):
     import matplotlib.pyplot as pplt
     from mpl_toolkits import mplot3d
 
@@ -38,7 +43,10 @@ def plot_3d_graph(stats, x_label, y_label, z_label, prefix, suffix = "", fontsiz
     ax.set_ylabel(labels[1])
     ax.set_zlabel(labels[2])
 
-    pplt.savefig("%s%s.png" % (prefix, ("-" + suffix) if suffix else ""))
+    filename = "%s%s.png" % (prefix, ("-" + suffix) if suffix else "")
+    filepath = osp.join(dir_path, filename)
+
+    pplt.savefig(filepath)
 
     pplt.close()
 
@@ -72,7 +80,9 @@ def get_models(repo, exclude = None, load = False, shuffle = False, jobs = None)
 
     return models
 
-def perform_on_models(to_perform, exclude = None, load = False, shuffle = False, jobs = None):
+def perform_on_models(to_perform, exclude = None, load = False, shuffle = False, jobs = None, kwargs = None):
+    kwargs = kwargs or {}
+
     with parallel.no_daemon_pool() as pool:
         fn = build_fn(get_models, exclude = exclude, load = load, shuffle = shuffle, jobs = jobs)
         models = flatten(pool.map(fn, DEFAULT_REPOSITORIES))
@@ -80,5 +90,5 @@ def perform_on_models(to_perform, exclude = None, load = False, shuffle = False,
         logger.info(f"Found {len(models)} models.")
 
         with parallel.no_daemon_pool(processes = jobs) as pool:
-            fn = build_fn(to_perform, jobs = jobs)
+            fn = build_fn(to_perform, jobs = jobs, **kwargs)
             list(tq(pool.imap(fn, models), total=len(models), desc="Performing on models..."))

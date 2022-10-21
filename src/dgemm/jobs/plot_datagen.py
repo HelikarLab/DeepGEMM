@@ -1,7 +1,7 @@
 import time
 
 from dgemm.data.functions.generate_flux_data import generate_flux_data
-from dgemm.jobs.helper import perform_on_models, plot_3d_graph
+from dgemm.jobs.helper import perform_on_models, plot_3d_graph, DEFAULT_ARTIFACTS_DIR
 
 from bpyutils import log
 from bpyutils.util._json import JSONLogger
@@ -13,7 +13,7 @@ KIND   = "datagen"
 
 stats_logger = JSONLogger("%s.json" % KIND)
 
-def gen_data(model_id, jobs = None):
+def gen_data(model_id, jobs = None, artifacts_dir = DEFAULT_ARTIFACTS_DIR):
     logger.info("Generating data for model %s...", model_id)
 
     try:
@@ -32,11 +32,15 @@ def gen_data(model_id, jobs = None):
         stats_logger.save()
         
         logger.info("Plotting graph...")
-        plot_3d_graph(stats_logger.store, "reactions", "genes", "infeasible", prefix = KIND, suffix = "infeasible")
-        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "time", prefix = KIND, suffix = "time")
+        plot_3d_graph(stats_logger.store, "reactions", "genes", "infeasible", prefix = KIND, suffix = "infeasible", dir_path = artifacts_dir)
+        plot_3d_graph(stats_logger.store, "metabolites", "reactions", "time", prefix = KIND, suffix = "time", dir_path = artifacts_dir)
     except Exception as e:
         logger.error(f"Failed to generate data for model {model_id}: {e}")
 
 def run(*args, **kwargs):
+    artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
+
     exclude = list(stats_logger.store)
-    perform_on_models(gen_data, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT)
+    perform_on_models(gen_data, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT, kwargs = {
+        "artifacts_dir": artifacts_dir
+    })
