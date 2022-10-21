@@ -46,6 +46,6 @@ def min_model(model_id, jobs = None):
     except Exception as e:
         logger.error(f"Failed to generate data for model {model_id}: {e}")
 
-if __name__ == "__main__":
+def run(*args, **kwargs):
     exclude = list(stats_logger.store)
     perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT)
