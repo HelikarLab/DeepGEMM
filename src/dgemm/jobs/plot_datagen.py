@@ -1,3 +1,4 @@
+import os.path as osp
 import time
 
 from dgemm.data.functions.generate_flux_data import generate_flux_data
@@ -11,9 +12,12 @@ from bpyutils.const import CPU_COUNT
 logger = log.get_logger(__name__)
 KIND   = "datagen"
 
-stats_logger = JSONLogger("%s.json" % KIND)
+def gen_data(model_id, jobs = None, **kwargs):
+    artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
+    logger_fpath  = kwargs.get("logger_fpath", osp.join(artifacts_dir, "%s.json" % KIND))
 
-def gen_data(model_id, jobs = None, artifacts_dir = DEFAULT_ARTIFACTS_DIR):
+    stats_logger  = JSONLogger(logger_fpath)
+
     logger.info("Generating data for model %s...", model_id)
 
     try:
@@ -40,7 +44,11 @@ def gen_data(model_id, jobs = None, artifacts_dir = DEFAULT_ARTIFACTS_DIR):
 def run(*args, **kwargs):
     artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
 
+    filename      = osp.join(artifacts_dir, "%s.json" % KIND)
+    stats_logger  = JSONLogger(filename)
+
     exclude = list(stats_logger.store)
     perform_on_models(gen_data, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT, kwargs = {
-        "artifacts_dir": artifacts_dir
+        "artifacts_dir": artifacts_dir,
+        "logger_fpath": filename
     })
