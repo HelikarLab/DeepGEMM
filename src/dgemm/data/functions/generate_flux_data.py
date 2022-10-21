@@ -112,7 +112,7 @@ def generate_flux_data(model_id, **kwargs):
     jobs           = kwargs.get("jobs", settings.get("jobs"))
     data_dir       = get_data_dir(NAME, kwargs.get("data_dir"))
     n_data_points  = kwargs.get("n_data_points", DEFAULT["n_flux_data_points"])
-    min_model      = kwargs.get("minimize_model", DEFAULT["minimize_model"])
+    min_model      = kwargs.get("minimize", DEFAULT["minimize_model"])
 
     model = None
 
@@ -163,6 +163,8 @@ def generate_flux_data(model_id, **kwargs):
     else:
         logger.warning("Output CSV file already exists at path: %s" % output_csv)
 
+    stats = { "infeasible": 0 }
+
     with tqdm(total = n_data_points, desc = "Generating Flux Data (%s)" % model.id) as pbar:
         i = 0
         while i < n_data_points:
@@ -171,6 +173,10 @@ def generate_flux_data(model_id, **kwargs):
             if success:
                 i += 1
                 pbar.update(1)
+            else:
+                stats["infeasible"] += 1
 
     logger.success("Generated flux data for model: %s" % model_id)
     logger.success("Currently, %s flux data points are available." % len(pd.read_csv(output_csv)))
+
+    return model, stats

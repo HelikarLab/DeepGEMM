@@ -177,3 +177,5 @@ pip-selfcheck.json
 
 dgemm-data
 work
+*.json
+*.png

@@ -2,6 +2,7 @@ from bpyutils._compat import iteritems
 
 from cobra.util.solver   import linear_reaction_coefficients
 from cobra.flux_analysis import flux_variability_analysis
+from cobra.io.web.load   import load_model as load_gemm
 
 def find_reaction(model, like, raise_err = True):
     reactions = model.reactions.query(lambda x: like in (x.id or x.name).lower())
@@ -43,3 +44,8 @@ def find_mle_reactions(model, cutoff = 1e-6, zero_flux_rxns = None):
             final_ids = list(set(check_ids) - set(zero_flux_rxn_ids))
 
     return model.reactions.get_by_any(final_ids)
+
+def normalize_model(m):
+    if isinstance(m, str):
+        m = load_gemm(m)
+    return m

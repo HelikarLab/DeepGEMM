@@ -46,7 +46,8 @@ from cobra.util.solver import (
 
 from dgemm.model.util import (
     find_reaction,
-    find_mle_reactions
+    find_mle_reactions,
+    normalize_model
 )
 from dgemm.model.optimize import optimize as optimize_model
 from dgemm.const import DEFAULT
@@ -244,6 +245,8 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
     Returns:
         model: minimized model
     """
+    m = normalize_model(m)
+
     minimized = m.copy()
     tolerance = normalize_cutoff(m, tolerance)
 
@@ -399,7 +402,7 @@ def minreact(m, growth_rate_cutoff = 1, tolerance = None, maintain = (BIGG_ID_AT
     else:
         _log_model(m, "info", "No reactions removed.")
 
-    return min_rxns, compressed
+    return min_rxns, m, compressed
 
 MINIMIZATION_ALGORITHMS = {
     "minreact": {

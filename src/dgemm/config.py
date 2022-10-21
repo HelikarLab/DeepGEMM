@@ -17,5 +17,5 @@ DEFAULT = {
     "diamond_db": "pdbaa",
     "model_id": "e_coli_core",
     "n_flux_data_points": 1000,
-    "minimize_model": True
+    "minimize_model": False
 }

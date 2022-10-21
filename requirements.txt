@@ -1,7 +1,7 @@
 bioservices==1.10.2
 tqdm
 requests
-git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
+# git+https://github.com/achillesrasquinha/bpyutils@develop#egg=bpyutils
 git+https://github.com/achillesrasquinha/deeply@develop#egg=deeply
 git+https://github.com/achillesrasquinha/cobrapy@custom#egg=cobra
 wandb
