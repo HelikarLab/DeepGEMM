@@ -14,9 +14,12 @@ import cobra
 logger = log.get_logger(__name__)
 KIND   = "minreact"
 
-stats_logger = JSONLogger("%s.json" % KIND)
+def min_model(model_id, jobs = None, **kwargs):
+    artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
+    logger_fpath  = kwargs.get("logger_fpath", osp.join(artifacts_dir, "%s.json" % KIND))
 
-def min_model(model_id, stats_logger, jobs = None, artifacts_dir = DEFAULT_ARTIFACTS_DIR):
+    stats_logger  = JSONLogger(logger_fpath)
+
     logger.info("Generating data for model %s...", model_id)
 
     try:
@@ -51,11 +54,11 @@ def min_model(model_id, stats_logger, jobs = None, artifacts_dir = DEFAULT_ARTIF
 def run(*args, **kwargs):
     artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
     
-    filename      = osp.join(artifacts_dir, "minreact.json")
+    filename      = osp.join(artifacts_dir, "%s.json" % KIND)
     stats_logger  = JSONLogger(filename)
 
     exclude = list(stats_logger.store)
     perform_on_models(min_model, exclude = exclude, load = False, shuffle = True, jobs = CPU_COUNT, kwargs = {
         "artifacts_dir": artifacts_dir,
-        "stats_logger": stats_logger
+        "logger_fpath": filename
     })
