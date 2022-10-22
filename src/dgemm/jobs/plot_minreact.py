@@ -52,7 +52,7 @@ def min_model(model_id, jobs = None, **kwargs):
         logger.error(f"Failed to generate data for model {model_id}: {e}")
 
 def run(*args, **kwargs):
-    jobs = int(kwargs.get("jobs", CPU_COUNT)) # HACK
+    jobs = kwargs.get("jobs", CPU_COUNT)
     artifacts_dir = kwargs.get("artifacts_dir", DEFAULT_ARTIFACTS_DIR)
     
     filename      = osp.join(artifacts_dir, "%s.json" % KIND)
