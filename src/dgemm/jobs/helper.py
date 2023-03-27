@@ -3,12 +3,12 @@ import os.path as osp
 
 from cobra.io.web.load import DEFAULT_REPOSITORIES, load_model
 
-from bpyutils.util.types import build_fn
-from bpyutils.util.array import flatten, sequencify
-from bpyutils.util.system import makedirs
-from bpyutils.util.string import get_random_str
-from bpyutils import parallel, log
-from bpyutils._compat import iteritems
+from upyog.util.types import build_fn
+from upyog.util.array import flatten, sequencify
+from upyog.util.system import makedirs
+from upyog.util.string import get_random_str
+from upyog import parallel, log
+from upyog._compat import iteritems
 
 from tqdm.auto import tqdm as tq
 

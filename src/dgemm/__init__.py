@@ -23,10 +23,10 @@ from dgemm.config      import PATH
 from dgemm.const       import DEFAULT
 from dgemm.__main__    import main
 
-from bpyutils.cache       import Cache
-from bpyutils.config      import Settings
-from bpyutils.util.jobs   import run_all as run_all_jobs, run_job
-from bpyutils import log
+from upyog.cache       import Cache
+from upyog.config      import Settings
+from upyog.util.jobs   import run_all as run_all_jobs, run_job
+from upyog import log
 
 cache = Cache(dirname = __name__)
 cache.create()

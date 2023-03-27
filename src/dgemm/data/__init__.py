@@ -3,11 +3,11 @@ import os.path as osp
 from dgemm.config import DEFAULT
 from dgemm import __name__ as NAME
 
-from bpyutils.util.ml      import get_data_dir
-from bpyutils.util.system  import (
+from upyog.util.ml      import get_data_dir
+from upyog.util.system  import (
     get_files
 )
-from bpyutils import parallel, log
+from upyog import parallel, log
 
 from dgemm.data.functions import (
     fetch_models,

@@ -1,5 +1,5 @@
-from bpyutils.const import CPU_COUNT
-from bpyutils.util.environ import getenv
+from upyog.const import CPU_COUNT
+from upyog.util.environ import getenv
 
 from dgemm import __name__ as NAME
 

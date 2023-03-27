@@ -4,11 +4,11 @@ import time
 from dgemm.data.functions.generate_flux_data import generate_flux_data
 from dgemm.jobs.helper import perform_on_models, plot_graph, DEFAULT_ARTIFACTS_DIR
 
-from bpyutils import log, parallel
-from bpyutils.util._json import JSONLogger
-from bpyutils.util._dict import merge_dict
-from bpyutils.util.types import build_fn
-from bpyutils.const import CPU_COUNT
+from upyog import log, parallel
+from upyog.util._json import JSONLogger
+from upyog.util._dict import merge_dict
+from upyog.util.types import build_fn
+from upyog.const import CPU_COUNT
 
 logger = log.get_logger(__name__)
 KIND   = "datagen"

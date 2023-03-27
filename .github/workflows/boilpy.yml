@@ -8,7 +8,7 @@ jobs:
     name: Template
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/achillesrasquinha/bpyutils
+      image: ghcr.io/achillesrasquinha/upyog
 
     steps:
       - uses: actions/checkout@v3
@@ -18,4 +18,4 @@ jobs:
       - name: Updating template
         run: |
           echo "Updating template..."
-          bpyutils --update-boilpy-project $GITHUB_WORKSPACE
+          upyog --update-boilpy-project $GITHUB_WORKSPACE

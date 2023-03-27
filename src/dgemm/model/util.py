@@ -1,4 +1,4 @@
-from bpyutils._compat import iteritems
+from upyog._compat import iteritems
 
 from cobra.util.solver   import linear_reaction_coefficients
 from cobra.flux_analysis import flux_variability_analysis

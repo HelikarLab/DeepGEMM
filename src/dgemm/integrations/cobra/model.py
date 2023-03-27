@@ -1,4 +1,4 @@
-from bpyutils.util.array import sequencify
+from upyog.util.array import sequencify
 
 import pandas as pd
 

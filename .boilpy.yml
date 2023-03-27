@@ -5,7 +5,7 @@ default_context:
   command: "dgemm"
   cli: "argparse"
   config: "y"
-  compat: "bpyutils"
+  compat: "upyog"
   jupyter: "y"
   sqlite: "y"
   pypy: "y"

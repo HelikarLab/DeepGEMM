@@ -1,4 +1,4 @@
-from bpyutils.api.base import BaseAPI
+from upyog.api.base import BaseAPI
 
 class KEGG(BaseAPI):
     pass

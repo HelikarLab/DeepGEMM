@@ -21,4 +21,4 @@ jobs:
           python setup.py develop
       - name: Run Pipeline
         run: |
-          bpyutils --run-ml dgemm
+          upyog --run-ml dgemm

@@ -4,7 +4,7 @@ from pymoo.core.problem import Problem as PyMOOProblem
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.optimize import minimize
 
-from bpyutils._compat import iteritems
+from upyog._compat import iteritems
 
 from cobra.util.array import constraint_matrices
 

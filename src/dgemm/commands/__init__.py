@@ -4,14 +4,14 @@ from __future__ import absolute_import
 # imports - standard imports
 
 from dgemm.commands.util 	    import cli_format
-from bpyutils.util._dict        import merge_dict
-from bpyutils.util.system   	import (touch)
-from bpyutils.util.error        import pretty_print_error
-from bpyutils.config			import environment
-from bpyutils.exception         import DependencyNotFoundError
-from bpyutils import log, parallel
+from upyog.util._dict        import merge_dict
+from upyog.util.system   	import (touch)
+from upyog.util.error        import pretty_print_error
+from upyog.config			import environment
+from upyog.exception         import DependencyNotFoundError
+from upyog import log, parallel
 from dgemm import cli
-from bpyutils._compat		    import iteritems
+from upyog._compat		    import iteritems
 from dgemm.__attr__      	    import __name__
 from dgemm.commands.helper      import (
     download_refseq,

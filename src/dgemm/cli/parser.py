@@ -10,10 +10,10 @@ from dgemm.__attr__     import (
     __description__,
     __command__
 )
-from bpyutils.util.environ    import getenv
-from bpyutils.cli             import util as _cli
-from bpyutils.cli.formatter   import ArgumentParserFormatter
-from bpyutils.cli.util        import _CAN_ANSI_FORMAT
+from upyog.util.environ    import getenv
+from upyog.cli             import util as _cli
+from upyog.cli.formatter   import ArgumentParserFormatter
+from upyog.cli.util        import _CAN_ANSI_FORMAT
 
 _DESCRIPTION_JUMBOTRON = \
 """

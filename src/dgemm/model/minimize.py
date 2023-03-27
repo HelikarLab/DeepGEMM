@@ -19,19 +19,19 @@ from cobra.util import linear_reaction_coefficients
 
 # imports - third-party and other utility imports
 import tqdm.notebook as tq
-from bpyutils.util._dict import dict_from_list
-from bpyutils.util._csv  import write as write_csv
-from bpyutils.util.types import lmap, lfilter, build_fn
-from bpyutils.util.array import flatten, squash
-from bpyutils.util.imports import import_handler
-from bpyutils._compat import iterkeys, iteritems
-from bpyutils import log, parallel
-from bpyutils.log import get_logger
-from bpyutils.const import CPU_COUNT
+from upyog.util._dict import dict_from_list
+from upyog.util._csv  import write as write_csv
+from upyog.util.types import lmap, lfilter, build_fn
+from upyog.util.array import flatten, squash
+from upyog.util.imports import import_handler
+from upyog._compat import iterkeys, iteritems
+from upyog import log, parallel
+from upyog.log import get_logger
+from upyog.const import CPU_COUNT
 
-from bpyutils.util.array import squash
-from bpyutils._compat import iteritems
-from bpyutils.log import get_logger
+from upyog.util.array import squash
+from upyog._compat import iteritems
+from upyog.log import get_logger
 
 from cobra.flux_analysis import (
     pfba,

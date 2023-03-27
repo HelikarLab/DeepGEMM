@@ -1,7 +1,7 @@
-from bpyutils.util.system import popen
-from bpyutils.const import CPU_COUNT
-from bpyutils.log import get_logger
-from bpyutils import parallel
+from upyog.util.system import popen
+from upyog.const import CPU_COUNT
+from upyog.log import get_logger
+from upyog import parallel
 
 from dgemm.api.refseq import RefSeq
 from dgemm.__attr__ import __name__ as NAME

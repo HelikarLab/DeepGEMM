@@ -4,12 +4,12 @@ from dgemm.config import DEFAULT
 from dgemm import __name__ as NAME
 from dgemm.data.functions.generate_flux_data import generate_flux_data
 
-from bpyutils.util.ml      import get_data_dir
-from bpyutils.util.types   import build_fn
-from bpyutils.util.types   import lmap
-from bpyutils.util.string  import strip
-from bpyutils.const        import CPU_COUNT
-from bpyutils              import parallel, log
+from upyog.util.ml      import get_data_dir
+from upyog.util.types   import build_fn
+from upyog.util.types   import lmap
+from upyog.util.string  import strip
+from upyog.const        import CPU_COUNT
+from upyog              import parallel, log
 
 import cobra
 from cobra.io.web.load import DEFAULT_REPOSITORIES as MODEL_REPOSITORIES

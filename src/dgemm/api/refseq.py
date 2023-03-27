@@ -1,18 +1,18 @@
 import os.path as osp
 
-from bpyutils.api.base      import BaseAPI
-from bpyutils.util.types    import lmap
-from bpyutils.util.request  import download_file
-from bpyutils.util._csv     import read as read_csv
-from bpyutils.util.system   import (
+from upyog.api.base      import BaseAPI
+from upyog.util.types    import lmap
+from upyog.util.request  import download_file
+from upyog.util._csv     import read as read_csv
+from upyog.util.system   import (
     read as read_file,
     write as write_file,
     get_basename
 )
-from bpyutils.util.array    import find
-from bpyutils.log           import get_logger
-from bpyutils._compat       import urljoin
-from bpyutils.db            import get_connection
+from upyog.util.array    import find
+from upyog.log           import get_logger
+from upyog._compat       import urljoin
+from upyog.db            import get_connection
 from dgemm.__attr__         import __name__ as NAME
 from dgemm.config           import PATH
 

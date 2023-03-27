@@ -5,14 +5,14 @@ import warnings
 from dgemm import __name__ as NAME
 from dgemm.config import DEFAULT
 
-from bpyutils.util.ml      import get_data_dir
-from bpyutils.util.types   import lmap, lfilter
-from bpyutils.util.string  import get_random_str
-from bpyutils.util.array   import flatten
-from bpyutils.util._csv    import (
+from upyog.util.ml      import get_data_dir
+from upyog.util.types   import lmap, lfilter
+from upyog.util.string  import get_random_str
+from upyog.util.array   import flatten
+from upyog.util._csv    import (
     write as write_csv
 )
-from bpyutils import log
+from upyog import log
 
 import cobra
 import pandas as pd

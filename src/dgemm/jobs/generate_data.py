@@ -1,7 +1,7 @@
 import os, os.path as osp
 import threading
 
-from bpyutils.util.system  import (
+from upyog.util.system  import (
     make_temp_dir,
     extract_all,
     makedirs,
@@ -10,12 +10,12 @@ from bpyutils.util.system  import (
     make_archive,
     pardir
 )
-from bpyutils.util.datetime import get_timestamp_str
-from bpyutils.util.environ  import getenv
-from bpyutils.util.git import update_git_repo, commit
-from bpyutils.config   import get_config_path
-from bpyutils.log      import get_logger
-from bpyutils.const    import CPU_COUNT
+from upyog.util.datetime import get_timestamp_str
+from upyog.util.environ  import getenv
+from upyog.util.git import update_git_repo, commit
+from upyog.config   import get_config_path
+from upyog.log      import get_logger
+from upyog.const    import CPU_COUNT
 
 from dgemm.data.functions import (
     fetch_models,

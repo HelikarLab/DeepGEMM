@@ -1,6 +1,6 @@
 import random
 
-from bpyutils.util.types import lfilter, check_array
+from upyog.util.types import lfilter, check_array
 
 MAXIMUM_KNOCKOUTS = 3
 

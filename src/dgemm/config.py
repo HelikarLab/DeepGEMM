@@ -4,8 +4,8 @@ import os.path as osp
 
 from dgemm.__attr__ import __name__ as NAME
 
-from bpyutils.config      import get_config_path
-from bpyutils.util.system import pardir
+from upyog.config      import get_config_path
+from upyog.util.system import pardir
 
 PATH = dict()
 

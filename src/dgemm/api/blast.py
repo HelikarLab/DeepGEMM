@@ -1,8 +1,8 @@
 import os.path as osp
 
-from bpyutils.model.base import BaseObject
-from bpyutils.config import get_config_path
-from bpyutils.util.system import makedirs, popen
+from upyog.model.base import BaseObject
+from upyog.config import get_config_path
+from upyog.util.system import makedirs, popen
 
 from dgemm.__attr__ import __name__ as NAME
 from dgemm.config import DEFAULT

@@ -41,4 +41,4 @@ jobs:
           python setup.py develop
       - name: Run Jobs
         run: |
-          bpyutils --run-jobs dgemm.jobs --param "check=True"
+          upyog --run-jobs dgemm.jobs --param "check=True"

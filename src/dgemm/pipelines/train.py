@@ -3,13 +3,13 @@ from statistics import LinearRegression
 import warnings
 import random
 
-from bpyutils.util.system import makepath, get_files
-from bpyutils.util.types import build_fn
-from bpyutils.util.ml import get_data_dir
-from bpyutils.log import get_logger
-from bpyutils.const import CPU_COUNT
-from bpyutils._compat import iterkeys
-from bpyutils import parallel
+from upyog.util.system import makepath, get_files
+from upyog.util.types import build_fn
+from upyog.util.ml import get_data_dir
+from upyog.log import get_logger
+from upyog.const import CPU_COUNT
+from upyog._compat import iterkeys
+from upyog import parallel
 
 from cobra.io.web import load_model as load_gemm
 from cobra.io import read_sbml_model

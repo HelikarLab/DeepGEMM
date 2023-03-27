@@ -5,9 +5,9 @@ from dgemm.model.minimize import minimize_model
 from dgemm.jobs.helper import perform_on_models, plot_3d_graph, DEFAULT_ARTIFACTS_DIR
 from dgemm.config import PATH
 
-from bpyutils import log
-from bpyutils.util._json import JSONLogger
-from bpyutils.const import CPU_COUNT
+from upyog import log
+from upyog.util._json import JSONLogger
+from upyog.const import CPU_COUNT
 
 import cobra
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-from bpyutils._compat import iteritems
+from upyog._compat import iteritems
 
 def create_sparse_stoichiometric_matrix(model, dtype = np.float64):
     metabolites   = model.metabolites
